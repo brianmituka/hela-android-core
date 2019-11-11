@@ -58,8 +58,7 @@ public class AskPermissionActivity extends AppCompatActivity {
 
                         }
                     }else {
-                        smsUtils.getMpesaMessages(getApplicationContext());
-//                        goToSplashChoiceActivity();
+                       goToSplashChoiceActivity();
                     }
 
 
