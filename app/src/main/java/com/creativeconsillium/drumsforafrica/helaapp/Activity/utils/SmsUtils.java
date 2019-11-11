@@ -53,4 +53,8 @@ public class SmsUtils {
         cursor.close();
        // return MpesaMessages;
     }
+
+    //Create methods to sort the message based on the messagebody;
+    public static void getIncomingMpesaMessages(){}
+    public static void getOutgoingMpesaMessages(){}
 }
