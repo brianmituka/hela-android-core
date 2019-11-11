@@ -42,7 +42,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         btnSignupSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UiUtils.showDialog("Creating account", CreateAccountActivity.this);
+
                 FirebaseUtils.createAccount(CreateAccountActivity.this,email, password);
                 //UiUtils.hideDialog();
                 //openBudgetChoice();
