@@ -1,0 +1,130 @@
+<resources>
+
+    <string name="app_name">Hela</string>
+
+
+    <!-- [START]: Image Views Strings   -->
+    <string name="imgvBack">Back</string>
+    <string name="imgvClose">Close</string>
+    <!-- [END]: Image Views Strings   -->
+
+
+    <string name="btnCreateMyAccount">Create My Account</string>
+    <string name="btnSignIn">Sign In</string>
+    <string name="btnSaveBudgetsCategories">Save Budgets Categories</string>
+    <string name="btnSaveBudgetsLimits">Save Budgets Limits</string>
+    <string name="btnSaveMyBudgets">Save My Budgets</string>
+    <string name="btnSaveBudget">Save Budget</string>
+    <string name="btnAddToBudget">Add to Budget</string>
+    <string name="btnSaveTransaction">Save Transaction</string>
+    <string name="btnSaveChanges">Save Changes</string>
+    <string name="btnCreateNewBudget">Create New Budget</string>
+    <string name="btnAddReceived">Add Received</string>
+
+    <string name="capPrivacyPolicy">By tapping Create My Account, you acknowledge that you have read the Privacy Policy and agree to the Terms of Service.</string>
+    <string name="capViewYourMonthlyTransactions">View your monthly transactions.</string>
+    <string name="capBudgetLimit">Set your budget limit.</string>
+    <string name="capMonthlyBudgetSpending">How much would you like to spend on each budget item monthly?</string>
+    <string name="capBudgetType">What you like to budget for?</string>
+    <string name="capBudgetRepeat">Select if you would like your budgets to repeat monthly.</string>
+    <string name="capViewYourMonthlyBudgets">View your monthly budgets.</string>
+    <string name="capViewAllYourTransactionSummaries">View all your transaction summaries.</string>
+    <string name="capRepeatBudgetMonthly">Repeat budget monthly?</string>
+
+    <string name="profileMyProfile">My Profile</string>
+    <string name="profileSecuritySettings">Security Settings</string>
+    <string name="profileHowItWorks">How it works</string>
+    <string name="profileBackupRestore">Backup and Restore</string>
+    <string name="profileMyBudgets">My Budgets</string>
+    <string name="profileAboutHela">About Hela</string>
+
+    <string name="titleHome">Home</string>
+    <string name="titleTransactions">Transactions</string>
+    <string name="titleBudgets">Budgets</string>
+    <string name="titleSummary">Summary</string>
+    <string name="titleSecurity">Security</string>
+    <string name="titleBackup">Backup and restore</string>
+    <string name="titleAddSpent">Add Spent</string>
+    <string name="titleChangePin">Change PIN</string>
+    <string name="title_fragment_settings_profile_edit">Edit Profile</string>
+    <string name="titleSignUp">Sign Up</string>
+    <string name="titleWelcomeBack">Welcome Back</string>
+    <string name="titleAddBudget">Add Budget</string>
+
+    <string name="labelSpent">Spent</string>
+    <string name="labelReceived">Received</string>
+    <string name="labelRemaining">Remaining</string>
+    <string name="labelForgotPin">Forgot PIN?</string>
+    <string name="labelViewAll">View All</string>
+
+    <string name="hintReEnterYourSecurityPin">Re-enter your security PIN</string>
+    <string name="hintEnterYourPhoneNumber">Enter your phone number</string>
+    <string name="hintEnterANewSecurityPin">Enter a new security PIN</string>
+    <string name="hintEnterYourEmailAddress">Enter your email address</string>
+    <string name="hintEnterYourFullName">Enter your full name</string>
+    <string name="hintEnterYourSecurityPin">Enter your security PIN</string>
+    <string name="hintEnterYourCurrentSecurityPin">Enter your current security PIN</string>
+    <string name="hintReEnterYourNewSecurityPin">Re-enter your new security PIN</string>
+    <string name="hintSelectBudget">Select budget</string>
+    <string name="hintBudgetName">Budget name</string>
+    <string name="hintAmount">Amount</string>
+    <string name="hintTime">Time</string>
+    <string name="hintPerson">Person</string>
+
+    <string name="dgtitleConfirmExit">Confirm Exit</string>
+    <string name="dgmsgConfirmExit">Are you sure you want to exit the App?</string>
+    <string name="dgbtnYesExit">Yes, Exit</string>
+    <string name="dgbtnNo">No</string>
+
+    <string name="todo">TODO</string>
+    <string name="shopping">Shopping</string>
+    <string name="transport">Transport</string>
+    <string name="car">Car</string>
+    <string name="food">Food</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="financial_expenses">Financial expenses</string>
+    <string name="repeat">Repeat</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_settings">Settings</string>
+    <string name="_2019">2019</string>
+    <string name="ksh_218_000">KSH 218,000</string>
+    <string name="ksh_518_000">KSH 518,000</string>
+    <string name="ksh_5_000">KSH 5,000</string>
+    <string name="ksh_18_000">KSH 18,000</string>
+    <string name="ksh_25_000">KSH 25,000</string>
+    <string name="ksh_85_000">Ksh 85,000</string>
+    <string name="_2_categories">2 Categories</string>
+    <string name="october">October</string>
+    <string name="october_2019">October 2019</string>
+    <string name="from">From:</string>
+    <string name="_3_transactions">3 transactions</string>
+    <string name="_11th_friday">11th Friday</string>
+    <string name="today_4_45_pm">Today 4:45 PM</string>
+    <string name="tType">Mpesa</string>
+    <string name="michael_mutethia_mutua">Michael Mutethia Mutua</string>
+    <string name="monthly_limit">Monthly limit</string>
+    <string name="monthly_repeat">Monthly Repeat</string>
+    <string name="add_to_budget2">Add to budget</string>
+    <string name="labelExpand">Expand</string>
+    <string name="titleFoodBudget">Food Budget</string>
+    <string name="hela_smart_wallet_is_a_digital_product_created_for_africa_s_mobile_money_market_by_drums_for_africa">Hela Smart Wallet™ is a digital product created for Africa\'s mobile money market by Drums for Africa.</string>
+    <string name="hela_smart_wallet">Hela Smart Wallet™</string>
+    <string name="version_1_0">Version 1.0</string>
+    <string name="_2019_all_rights_reserved">©2019 All Rights Reserved.</string>
+    <string name="backup_frequency">Backup frequency</string>
+    <string name="backup_email">Backup email</string>
+    <string name="email_example_com">email@example.com</string>
+    <string name="automatic_backup">Automatic backup</string>
+    <string name="backup_now">Backup Now</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="restore_my_data">Restore My Data</string>
+    <string name="request_for_permissions">Allow Permissions</string>
+    <string name="request_for_permissions_message">For Hela to function properly, it requires to access Your M-PESA messages. Without the permissions to read SMS, Hela
+    will not function properly.</string>
+    <string name="jan">Jan</string>
+
+</resources>

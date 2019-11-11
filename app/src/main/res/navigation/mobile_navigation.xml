@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.creativeconsillium.drumsforafrica.helaapp.Activity.Fragments.FragmentHome"
+        android:label="@string/titleHome"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_frag_home_summary"
+        android:name="com.creativeconsillium.drumsforafrica.helaapp.Activity.Fragments.FragHomeSummary"
+        android:label="@string/titleSummary"
+        tools:layout="@layout/frag_home_summary" />
+
+    <fragment
+        android:id="@+id/navigation_budgets"
+        android:name="com.creativeconsillium.drumsforafrica.helaapp.Activity.Fragments.FragmentBudgets"
+        android:label="@string/titleBudgets"
+        tools:layout="@layout/fragment_budgets" />
+
+    <fragment
+        android:id="@+id/nav_frag_budgets_detail"
+        android:name="com.creativeconsillium.drumsforafrica.helaapp.Activity.Fragments.FragmentBudgetsDetail"
+        android:label="@string/titleBudgets"
+        tools:layout="@layout/fragment_budgets_detail" />
+
+    <fragment
+        android:id="@+id/navigation_transactions"
+        android:name="com.creativeconsillium.drumsforafrica.helaapp.Activity.Fragments.FragmentTransactions"
+        android:label="@string/titleTransactions"
+        tools:layout="@layout/fragment_transactions" />
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.creativeconsillium.drumsforafrica.helaapp.Activity.Fragments.FragmentSettings"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings"/>
+
+    <fragment
+        android:id="@+id/nav_frag_settings_profile"
+        android:name="com.creativeconsillium.drumsforafrica.helaapp.Activity.Fragments.FragmentSettingsProfile"
+        android:label="@string/title_fragment_settings_profile_edit"
+        tools:layout="@layout/fragment_settings_profile"/>
+
+    <fragment
+        android:id="@+id/nav_frag_settings_security"
+        android:name="com.creativeconsillium.drumsforafrica.helaapp.Activity.Fragments.FragmentSettingsSecurity"
+        android:label="@string/profileSecuritySettings"
+        tools:layout="@layout/fragment_settings_security"/>
+
+    <fragment
+        android:id="@+id/nav_frag_settings_budgets"
+        android:name="com.creativeconsillium.drumsforafrica.helaapp.Activity.Fragments.FragmentSettingsBudgets"
+        android:label="@string/profileMyBudgets"
+        tools:layout="@layout/fragment_settings_budget_choice"/>
+
+    <fragment
+        android:id="@+id/nav_frag_settings_backup"
+        android:name="com.creativeconsillium.drumsforafrica.helaapp.Activity.Fragments.FragmentSettingsBackup"
+        android:label="@string/profileMyProfile"
+        tools:layout="@layout/fragment_settings_backup"/>
+
+    <fragment
+        android:id="@+id/nav_frag_settings_about"
+        android:name="com.creativeconsillium.drumsforafrica.helaapp.Activity.Fragments.FragmentSettingsAbout"
+        android:label="@string/profileAboutHela"
+        tools:layout="@layout/fragment_settings_about"/>
+
+</navigation>
