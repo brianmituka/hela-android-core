@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.CreateAccountActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -18,7 +19,9 @@ public class FirebaseUtils {
 
     public static void createAccount(final Activity activity, EditText email, EditText password){
         System.out.println("Hotooooooo");
+        UiUtils.showDialog("Creating account", activity);
         if (!isEmailAndPasswordValid(email, password)){
+            UiUtils.hideDialog();
             return;
         }else {
             //verify email, passwords etc
@@ -27,12 +30,15 @@ public class FirebaseUtils {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
-
+                        System.out.println("Results::::" + task.getResult());
+                        UiUtils.hideDialog();
+                        isLoggedIn();
                         Toast.makeText(activity, "Account successfully created",
                                 Toast.LENGTH_SHORT).show();
 
                     }else{
                         System.out.println("ERROR::" + task.getException());
+                        UiUtils.hideDialog();
                         Toast.makeText(activity, "Account creation failed",
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -68,6 +74,7 @@ public class FirebaseUtils {
         if (firebaseUser == null){
             return false;
         }else {
+            System.out.println("CurrentUser >>" + firebaseUser);
             return true;
         }
     }
