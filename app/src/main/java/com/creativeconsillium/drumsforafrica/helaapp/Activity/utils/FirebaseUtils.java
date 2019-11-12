@@ -45,7 +45,7 @@ public class FirebaseUtils {
                     }else{
                         System.out.println("ERROR::" + task.getException());
                         UiUtils.hideDialog();
-                        Toast.makeText(activity, "Account creation failed",
+                        Toast.makeText(activity, "Check your password, have at least 6 characters",
                                 Toast.LENGTH_SHORT).show();
                     }
 

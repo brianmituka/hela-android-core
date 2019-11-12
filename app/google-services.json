@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "362271758643",
+    "firebase_url": "https://hela-43741.firebaseio.com",
+    "project_id": "hela-43741",
+    "storage_bucket": "hela-43741.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:362271758643:android:75bd6eb7ac9e58164d0646",
+        "android_client_info": {
+          "package_name": "com.creativeconsillium.drumsforafrica.helaapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "362271758643-f8i0inbgtp9hserudn18ump5c9c1e66h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwx3XgSLtmUi431G0eD9hz80ArIPKLf-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "362271758643-f8i0inbgtp9hserudn18ump5c9c1e66h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
