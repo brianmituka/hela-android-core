@@ -44,8 +44,9 @@ public class FirebaseUtils {
 
                     }else{
                         System.out.println("ERROR::" + task.getException());
+                        String errorText = task.getException().getMessage();
                         UiUtils.hideDialog();
-                        Toast.makeText(activity, "Check your password, have at least 6 characters",
+                        Toast.makeText(activity, errorText,
                                 Toast.LENGTH_SHORT).show();
                     }
 
@@ -90,7 +91,7 @@ public class FirebaseUtils {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Log.d(TAG, "Username Added " +  user.getDisplayName());
+                    Log.i(TAG, "Username Added " +  user.getDisplayName());
                 } else {
                     Log.i(TAG,  "ERROR::: " + task.getException().getMessage());
                 }
