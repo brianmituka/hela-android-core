@@ -3,17 +3,27 @@ package com.creativeconsillium.drumsforafrica.helaapp.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.FirebaseUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.R;
 
 public class SigninActivity extends AppCompatActivity {
+
+    private EditText email;
+    private EditText password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
+
+        email = (EditText) findViewById(R.id.editText4);
+        password = (EditText) findViewById(R.id.editText5);
+
+        FirebaseUtils.Login(SigninActivity.this,email, password);
     }
 
 

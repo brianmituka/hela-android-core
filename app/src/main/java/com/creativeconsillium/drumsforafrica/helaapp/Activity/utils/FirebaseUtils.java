@@ -1,13 +1,16 @@
 package com.creativeconsillium.drumsforafrica.helaapp.Activity.utils;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.CreateAccountActivity;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.User;
+import com.creativeconsillium.drumsforafrica.helaapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,26 +32,25 @@ public class FirebaseUtils {
 
 
     //   Initialize database and access write-location
-    public static DatabaseReference createDatabaseRef(String node){
+    public static DatabaseReference createDatabaseRef(String node) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference(node);
         return reference;
     }
 
-    public static void createAccount(final Activity activity, EditText email, EditText password, EditText name, final EditText phoneNumber){
-        System.out.println("Hotooooooo");
+    public static void createAccount(final Activity activity, EditText email, EditText password, EditText name, final EditText phoneNumber) {
         final String nameString = name.getText().toString();
         UiUtils.showDialog("Creating account", activity);
-        if (!isEmailAndPasswordValid(email, password)){
+        if (!isEmailAndPasswordValid(email, password)) {
             UiUtils.hideDialog();
             return;
-        }else {
+        } else {
             //verify email, passwords etc
             firebaseAuth = FirebaseAuth.getInstance();
             firebaseAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         System.out.println("Results::::" + task.getResult());
                         updateUserName(nameString);
                         saveUserInformation(phoneNumber);
@@ -57,7 +59,7 @@ public class FirebaseUtils {
                         Toast.makeText(activity, "Account successfully created",
                                 Toast.LENGTH_SHORT).show();
                     } else {
-                        Log.e(TAG , "ERROR " + task.getException().getMessage());
+                        Log.e(TAG, "ERROR " + task.getException().getMessage());
                         String errorText = task.getException().getMessage();
                         UiUtils.hideDialog();
                         Toast.makeText(activity, errorText,
@@ -69,8 +71,9 @@ public class FirebaseUtils {
         }
 
     }
-    public static boolean isEmailAndPasswordValid(EditText email, EditText password){
-       boolean isValid = true;
+
+    public static boolean isEmailAndPasswordValid(EditText email, EditText password) {
+        boolean isValid = true;
         String emailString = email.getText().toString();
         if (TextUtils.isEmpty(emailString)) {
             email.setError("Required.");
@@ -88,45 +91,46 @@ public class FirebaseUtils {
         }
 
 
-       return isValid;
+        return isValid;
     }
-    //Save additional user
-    public static void saveUserInformation(EditText phoneNumber){
-       String userID = getCurrentUser().getUid();
-        String phoneNumberString = phoneNumber.getText().toString();
-       Log.i(TAG, "Saving " + getCurrentUser().getDisplayName() + "Phone Number");
-        User user = new User(phoneNumberString);
-       DatabaseReference userDetailsReference = createDatabaseRef("user_details");
 
-       userDetailsReference.child(userID).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-           @Override
-           public void onSuccess(Void aVoid) {
-               Log.i(TAG, "SuccessFully saved " + getCurrentUser().getDisplayName() + "Phone Number");
-           }
-       }).addOnFailureListener(new OnFailureListener() {
-           @Override
-           public void onFailure(@NonNull Exception e) {
-               Log.i(TAG, "Saving Failed For " + getCurrentUser().getDisplayName() + "Phone Number");
-               return;
-           }
-       });
+    //Save additional user
+    public static void saveUserInformation(EditText phoneNumber) {
+        String userID = getCurrentUser().getUid();
+        String phoneNumberString = phoneNumber.getText().toString();
+        Log.i(TAG, "Saving " + getCurrentUser().getDisplayName() + "Phone Number");
+        User user = new User(phoneNumberString);
+        DatabaseReference userDetailsReference = createDatabaseRef("user_details");
+
+        userDetailsReference.child(userID).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.i(TAG, "SuccessFully saved " + getCurrentUser().getDisplayName() + "Phone Number");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "Saving Failed For " + getCurrentUser().getDisplayName() + "Phone Number");
+                return;
+            }
+        });
 
         //Call firebase database and store the phoneNumber in the user_details table together
         // the userID
 
     }
 
-    public static void updateUserName(String name){
+    public static void updateUserName(String name) {
         final FirebaseUser user = getCurrentUser();
         UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
                 .setDisplayName(name).build();
-        user.updateProfile(profileChangeRequest).addOnCompleteListener( new OnCompleteListener<Void>() {
+        user.updateProfile(profileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Log.i(TAG, "Username Added " +  user.getDisplayName());
+                    Log.i(TAG, "Username Added " + user.getDisplayName());
                 } else {
-                    Log.i(TAG,  "ERROR::: " + task.getException().getMessage());
+                    Log.i(TAG, "ERROR::: " + task.getException().getMessage());
                 }
             }
         });
@@ -134,19 +138,23 @@ public class FirebaseUtils {
     }
 
     //get current User
-    public static FirebaseUser getCurrentUser(){
+    public static FirebaseUser getCurrentUser() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Log.i(TAG, "EMAIL IS" + user.getEmail());
         return user;
     }
 
-    public static boolean isLoggedIn(){
+    public static boolean isLoggedIn() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if (firebaseUser == null){
+        if (firebaseUser == null) {
             return false;
-        }else {
+        } else {
             System.out.println("CurrentUser >>" + firebaseUser.getDisplayName());
             return true;
         }
+    }
+
+    public static void Login(final Activity activity, EditText email, EditText password) {
+
     }
 }
