@@ -2,6 +2,7 @@ package com.creativeconsillium.drumsforafrica.helaapp.Activity.utils;
 
 import android.app.Activity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -11,14 +12,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import androidx.annotation.NonNull;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class FirebaseUtils {
     public static FirebaseAuth firebaseAuth;
 
-    public static void createAccount(final Activity activity, EditText email, EditText password){
+    public static void createAccount(final Activity activity, EditText email, EditText password, EditText name, EditText mobile){
         System.out.println("Hotooooooo");
+        final String nameString = name.getText().toString();
         UiUtils.showDialog("Creating account", activity);
         if (!isEmailAndPasswordValid(email, password)){
             UiUtils.hideDialog();
@@ -31,8 +36,9 @@ public class FirebaseUtils {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
                         System.out.println("Results::::" + task.getResult());
+                        updateUserName(nameString);
+
                         UiUtils.hideDialog();
-                        isLoggedIn();
                         Toast.makeText(activity, "Account successfully created",
                                 Toast.LENGTH_SHORT).show();
 
@@ -69,6 +75,37 @@ public class FirebaseUtils {
 
        return isValid;
     }
+    public static void saveUserInformation(EditText phoneNumber, String UserId){
+        String phoneNumberString = phoneNumber.getText().toString();
+        //Call firebase database and store the phoneNumber in the user_details table together
+        // the userID
+
+    }
+
+    public static void updateUserName(String name){
+        final FirebaseUser user = getCurrentUser();
+        UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                .setDisplayName(name).build();
+        user.updateProfile(profileChangeRequest).addOnCompleteListener( new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "Username Added " +  user.getDisplayName());
+                } else {
+                    Log.i(TAG,  "ERROR::: " + task.getException().getMessage());
+                }
+            }
+        });
+
+    }
+
+    //get current User
+    public static FirebaseUser getCurrentUser(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Log.i(TAG, "EMAIL IS" + user.getEmail());
+        return user;
+    }
+
     public static boolean isLoggedIn(){
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null){
