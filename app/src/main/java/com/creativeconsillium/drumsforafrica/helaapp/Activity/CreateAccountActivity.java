@@ -38,12 +38,12 @@ public class CreateAccountActivity extends AppCompatActivity {
         name = (EditText) findViewById(R.id.editText);
         phone = (EditText) findViewById(R.id.editText2);
         email = (EditText) findViewById(R.id.editText4);
-        password = (EditText) findViewById(R.id.editText6);
+        password = (EditText) findViewById(R.id.editText5);
         btnSignupSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                FirebaseUtils.createAccount(CreateAccountActivity.this,email, password);
+                FirebaseUtils.createAccount(CreateAccountActivity.this,email, password, name, phone);
                 //UiUtils.hideDialog();
                 //openBudgetChoice();
             }
