@@ -7,21 +7,35 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.CreateAccountActivity;
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import androidx.annotation.NonNull;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class FirebaseUtils {
+
     public static FirebaseAuth firebaseAuth;
 
-    public static void createAccount(final Activity activity, EditText email, EditText password, EditText name, EditText mobile){
+
+    //   Initialize database and access write-location
+    public static DatabaseReference createDatabaseRef(String node){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference(node);
+        return reference;
+    }
+
+    public static void createAccount(final Activity activity, EditText email, EditText password, EditText name, final EditText phoneNumber){
         System.out.println("Hotooooooo");
         final String nameString = name.getText().toString();
         UiUtils.showDialog("Creating account", activity);
@@ -37,13 +51,13 @@ public class FirebaseUtils {
                     if (task.isSuccessful()){
                         System.out.println("Results::::" + task.getResult());
                         updateUserName(nameString);
+                        saveUserInformation(phoneNumber);
 
                         UiUtils.hideDialog();
                         Toast.makeText(activity, "Account successfully created",
                                 Toast.LENGTH_SHORT).show();
-
-                    }else{
-                        System.out.println("ERROR::" + task.getException());
+                    } else {
+                        Log.e(TAG , "ERROR " + task.getException().getMessage());
                         String errorText = task.getException().getMessage();
                         UiUtils.hideDialog();
                         Toast.makeText(activity, errorText,
@@ -76,8 +90,27 @@ public class FirebaseUtils {
 
        return isValid;
     }
-    public static void saveUserInformation(EditText phoneNumber, String UserId){
+    //Save additional user
+    public static void saveUserInformation(EditText phoneNumber){
+       String userID = getCurrentUser().getUid();
         String phoneNumberString = phoneNumber.getText().toString();
+       Log.i(TAG, "Saving " + getCurrentUser().getDisplayName() + "Phone Number");
+        User user = new User(phoneNumberString);
+       DatabaseReference userDetailsReference = createDatabaseRef("user_details");
+
+       userDetailsReference.child(userID).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+           @Override
+           public void onSuccess(Void aVoid) {
+               Log.i(TAG, "SuccessFully saved " + getCurrentUser().getDisplayName() + "Phone Number");
+           }
+       }).addOnFailureListener(new OnFailureListener() {
+           @Override
+           public void onFailure(@NonNull Exception e) {
+               Log.i(TAG, "Saving Failed For " + getCurrentUser().getDisplayName() + "Phone Number");
+               return;
+           }
+       });
+
         //Call firebase database and store the phoneNumber in the user_details table together
         // the userID
 
@@ -112,12 +145,8 @@ public class FirebaseUtils {
         if (firebaseUser == null){
             return false;
         }else {
-            System.out.println("CurrentUser >>" + firebaseUser);
+            System.out.println("CurrentUser >>" + firebaseUser.getDisplayName());
             return true;
         }
     }
-    public static void saveUserDetails (){
-
-    }
-
 }
