@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.FirebaseUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.R;
 
+import static com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.FirebaseUtils.firebaseAuth;
+
 public class SigninActivity extends AppCompatActivity {
 
     private EditText email;
@@ -30,10 +32,10 @@ public class SigninActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseUtils.loginIntoApp(SigninActivity.this,email, password);
+
                 openHome();
             }
         });
-
 
     }
 

@@ -145,6 +145,7 @@ public class FirebaseUtils {
     }
 
     public static boolean isLoggedIn() {
+        firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null) {
             return false;

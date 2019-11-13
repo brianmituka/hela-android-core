@@ -7,6 +7,7 @@ import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.FirebaseUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.PermissionsUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.R;
 
@@ -24,7 +25,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         Boolean permissions = permissionsUtils.checkPermissions(SplashActivity.this);
         System.out.println(">>>>>>> " + permissions);
-    if (permissions){
+    if (permissions && !FirebaseUtils.isLoggedIn()){
         /* New Handler to start the Menu-Activity
          * and close this Splash-Screen after some seconds.*/
         new Handler().postDelayed(new Runnable(){
@@ -37,6 +38,17 @@ public class SplashActivity extends AppCompatActivity {
             }
         }, SPLASH_DISPLAY_LENGTH);
 
+    } else if (permissions && FirebaseUtils.isLoggedIn()){
+
+        new Handler().postDelayed(new Runnable(){
+            @Override
+            public void run() {
+                /* Create an Intent that will start the Menu-Activity. */
+                openHome();
+            }
+        }, SPLASH_DISPLAY_LENGTH);
+
+
     } else {
         new Handler().postDelayed(new Runnable(){
             @Override
@@ -45,8 +57,6 @@ public class SplashActivity extends AppCompatActivity {
                 goToPermissionsActivity();
             }
         }, SPLASH_DISPLAY_LENGTH);
-
-
 
     }
 
@@ -58,6 +68,12 @@ public class SplashActivity extends AppCompatActivity {
        SplashActivity.this.startActivity(permissionsIntent);
        SplashActivity.this.finish();
    }
+
+    public void openHome () {
+        Intent i = new Intent(this, HomeActivity.class);
+        startActivity(i);
+        this.finish();
+    }
 
 
 }
