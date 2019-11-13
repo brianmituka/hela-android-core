@@ -183,4 +183,33 @@ public class FirebaseUtils {
             }
         });
     }
+    public static void resetPassword(final Activity activity, EditText email) {
+
+        String emailString = email.getText().toString();
+
+        UiUtils.showDialog("Enter your registered email", activity);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.sendPasswordResetEmail(emailString)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                    UiUtils.hideDialog();
+                    ;
+                    Toast.makeText(activity, "An email has been sent to your email ",
+                            Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "Password reset successful");
+
+                }else {
+                    UiUtils.hideDialog();
+                    String errorText = task.getException().getMessage();
+                    UiUtils.hideDialog();
+                    Toast.makeText(activity, errorText,
+                            Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
 }
