@@ -101,7 +101,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/style_btn_yellow_solid"
-        android:onClick="openHome"
         android:text="@string/btnSignIn"
         android:textColor="@android:color/white"
         android:textSize="16sp"

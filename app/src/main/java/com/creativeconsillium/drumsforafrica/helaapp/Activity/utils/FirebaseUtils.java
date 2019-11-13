@@ -154,7 +154,32 @@ public class FirebaseUtils {
         }
     }
 
-    public static void Login(final Activity activity, EditText email, EditText password) {
+    public static void loginIntoApp(final Activity activity, EditText email, EditText password) {
 
+        String emailString = email.getText().toString();
+        String passwordString = password.getText().toString();
+        UiUtils.showDialog("Signing In", activity);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.signInWithEmailAndPassword(emailString, passwordString).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    UiUtils.hideDialog();
+                   ;
+                    Toast.makeText(activity, "Login successful ",
+                            Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "Login successful");
+
+                }else {
+                    UiUtils.hideDialog();
+                    String errorText = task.getException().getMessage();
+                    UiUtils.hideDialog();
+                    Toast.makeText(activity, errorText,
+                            Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
     }
 }
