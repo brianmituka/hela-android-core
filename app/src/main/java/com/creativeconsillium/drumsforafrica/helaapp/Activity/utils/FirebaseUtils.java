@@ -190,6 +190,7 @@ public class FirebaseUtils {
         });
     }
     public static void resetPassword(final Activity activity, EditText email) {
+        UiUtils.showDialog("Sending Password reset email", activity);
         String emailString = email.getText().toString();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseAuth.sendPasswordResetEmail(emailString)
