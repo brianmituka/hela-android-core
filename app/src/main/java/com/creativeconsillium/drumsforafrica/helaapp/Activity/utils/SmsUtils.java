@@ -4,9 +4,20 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.text.TextUtils;
+import android.util.Log;
 
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.MpesaMessage;
+
+import org.joda.time.LocalDate;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class SmsUtils {
     // ACCESS MPESA SMS
@@ -22,6 +33,10 @@ public class SmsUtils {
    public static String[] selectionAgrument = { "" };
    public static String sortOrder = "";
    public static List MpesaMessages = new ArrayList<>();
+   static BigDecimal formattedAmount;
+   static String transactionType;
+   static String transactionCode;
+   static LocalDate formattedDate;
 
 
     public static  void getMpesaMessages (Context context) {
@@ -47,7 +62,15 @@ public class SmsUtils {
             String sender = cursor.getString(cursor.getColumnIndex(SmsUtils.ADDRESS_COLUMN));
             String message = cursor.getString(cursor.getColumnIndexOrThrow(SmsUtils.BODY_COLUMN));
             String date = cursor.getString(cursor.getColumnIndexOrThrow(SmsUtils.DATE_COLUMN));
-            System.out.println("Sender:: " + sender + " Message ::" + message + " On:: " + date);
+           // System.out.println("Sender:: " + sender + " Message ::" + message + " On:: " + date);
+            Log.i(TAG, "code:: " + extractMpesaCode(message) + " date " + extractMpesaDate(message) +
+                  " amount:: " + extractMpesaAmount(message) + " type:: " + mpesaMessageType(message) + " message "   );
+            MpesaMessage mpesaMessage = new MpesaMessage(extractMpesaCode(message), extractMpesaAmount(message), extractMpesaDate(message), mpesaMessageType(message));
+            //extractMpesaCode(message);
+            //extractMpesaDate(message);
+            //extractMpesaAmount(message);
+            //mpesaMessageType(message);
+
 
         } while (cursor.moveToNext());
         cursor.close();
@@ -55,6 +78,126 @@ public class SmsUtils {
     }
 
     //Create methods to sort the message based on the messagebody;
-    public static void getIncomingMpesaMessages(){}
-    public static void getOutgoingMpesaMessages(){}
+    public static boolean getIncomingMpesaMessages(String message){
+        boolean found = false;
+        String[] moneyInKeyWords = {
+                "received",
+        };
+        for (int i = 0; i <moneyInKeyWords.length ; i++) {
+            Pattern keywordPattern = Pattern.compile(moneyInKeyWords[i]);
+            found = keywordPattern.matcher(message).find();
+            if (found) {
+                return found; 
+            }
+        }
+        return found;
+    }
+    public static boolean getOutgoingMpesaMessages(String message){
+        boolean found = false;
+        String[] moneyOutKeywords = {
+          "sent","bought","AMWithdraw","paid","PMWithdraw"
+        };
+        for (int i = 0; i <moneyOutKeywords.length ; i++) {
+            Pattern moneyOutPattern = Pattern.compile(moneyOutKeywords[i]);
+            found = moneyOutPattern.matcher(message).find();
+            if (found) {
+                return found; 
+            }
+            // It's now good! Thanks. ok sawa logging out.
+            //I need to log here.... or maybe once this becomes true I stop looping???
+            // Yes as soon as it is true you can break
+            // In the SO there's an example they have shared that uses Pattern
+
+            // Yes just seen it, you could also return as soon as you get it. - How would this look??
+            // that means found will need to be true initially??
+            // [ "sent","bought","AMWithdraw","paid","PMWithdraw"].contains(msg) Is there something like this in Java. I don't think you should loop.
+            // Let me try and check if Pattern has such a
+        }
+        // Let me test that 
+        // C
+        // public static boolean stringContainsItemFromList(String inputStr, String[] items) {
+        //     return Arrays.stream(items).parallel().anyMatch(inputStr::contains);
+        // } https://stackoverflow.com/questions/8992100/test-if-a-string-contains-any-of-the-strings-from-an-array
+
+        
+        return found;
+    }
+
+    public static String mpesaMessageType(String message){
+
+        if (getOutgoingMpesaMessages(message)){
+           transactionType = "out";
+          // Log.i(TAG, "the transaction::moneyout " + message + "is " + transactionType );
+        }
+        if (getIncomingMpesaMessages(message)){
+          transactionType = "in";
+           // Log.i(TAG, "the transaction::moneyin " + message + "is " + transactionType );
+        }
+
+        return transactionType;
+    }
+
+    public static String extractMpesaCode(String message){
+        String transactionCoderegex = "^[A-Za-z0-9]\\w+.";
+        Pattern mpesaCodePattern = Pattern.compile(transactionCoderegex);
+        Matcher m = mpesaCodePattern.matcher(message);
+        if (m.find()) {
+            //Log.i(TAG, mpesaCodePattern + " matches " + m.group(0) + " " + message);
+            /**
+             * m.group(0) returns the matched character
+             */
+            transactionCode  = m.group(0);
+           // Log.i(TAG, "the transaction code is:: " + transactionCode + " " + message);
+        } else {
+            Log.i(TAG, "No match found");
+
+        }
+        return transactionCode;
+    }
+
+
+    public static LocalDate extractMpesaDate(String message){
+        String mpesaMessageDate = "";
+        String mpesaDateRegex = "[0-3]?[0-9]/[0-3]?[0-9]/(?:[0-9]{2})?[0-9]{2}";
+        Pattern mpesaDatePattern = Pattern.compile(mpesaDateRegex);
+        Matcher m = mpesaDatePattern.matcher(message);
+        if (m.find()){
+            //Log.i(TAG, mpesaDatePattern + " matches " + m.group(0) + " " + message);
+            /**
+             * m.group(0) returns the matched character
+             */
+            mpesaMessageDate  = m.group(0);
+            formattedDate = FormatUtils.formatDate(mpesaMessageDate);
+            Log.i(TAG, "the formatted transaction date is::" + formattedDate);
+        } else {
+            Log.i(TAG, "no matches found!!");
+        }
+
+        return formattedDate;
+
+    }
+    public static BigDecimal extractMpesaAmount(String message){
+        String mpesaAmount = "";
+        String mpesaAmountRegex = "Ksh\\d+,?\\d+\\.?\\d*";
+        Pattern mpesaAmountPattern = Pattern.compile(mpesaAmountRegex);
+        Matcher m = mpesaAmountPattern.matcher(message);
+        if (m.find()){
+            //Log.i(TAG, mpesaAmountPattern + " matches " + m.group(0) + " " + message);
+            mpesaAmount = m.group(0).replaceAll("Ksh|,?", "");
+
+           // Log.i(TAG, "mpesa amount " + mpesaAmount);
+            formattedAmount = FormatUtils.formatMpesaAmount(mpesaAmount);
+            Log.i(TAG, "The formatted amount is:: " + formattedAmount);
+
+           // Log.i(TAG, "The other that matches:: " + m.group(1));
+           // Log.i(TAG, "The amount is:: " + mpesaAmount + " " + message);
+        }else {
+            Log.i(TAG, "No matches found!!!");
+        }
+        return formattedAmount;
+    }
+    public static void uploadMessagesToFirebase(MpesaMessage message){
+
+
+    }
 }
