@@ -2,7 +2,14 @@ package com.creativeconsillium.drumsforafrica.helaapp.Activity.Model;
 
 public class ModelBudgets {
 
-    private String budgetCategory, budgetNumber, budgetSpentAmount, budgetRemainingAmount;
+    private String budgetCategory;
+    private String budgetNumber;
+    private String budgetSpentAmount;
+    private String budgetRemainingAmount;
+    private String budgetType;
+
+    public ModelBudgets() {
+    }
 
     public ModelBudgets(String budgetCategory, String budgetNumber, String budgetSpentAmount, String budgetRemainingAmount) {
         this.budgetCategory = budgetCategory;
