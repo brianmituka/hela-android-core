@@ -137,12 +137,18 @@ public class FirebaseUtils {
 
     }
 
+
     //get current User
     public static FirebaseUser getCurrentUser() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Log.i(TAG, "EMAIL IS" + user.getEmail());
         return user;
     }
+
+    //get user details or profile
+        public static void getUserProfileDetails(String name, String number, String email) {
+
+        }
 
     public static boolean isLoggedIn() {
         firebaseAuth = FirebaseAuth.getInstance();
@@ -173,6 +179,31 @@ public class FirebaseUtils {
                     Log.i(TAG, "Login successful");
 
                 }else {
+//                    UiUtils.hideDialog();
+                    String errorText = task.getException().getMessage();
+                    UiUtils.hideDialog();
+                    Toast.makeText(activity, errorText,
+                            Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
+    public static void resetPassword(final Activity activity, EditText email) {
+        String emailString = email.getText().toString();
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.sendPasswordResetEmail(emailString)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                    UiUtils.hideDialog();
+
+                    Toast.makeText(activity, "An email has been sent to your email ",
+                            Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "Password reset successful");
+
+                }else {
                     UiUtils.hideDialog();
                     String errorText = task.getException().getMessage();
                     UiUtils.hideDialog();
@@ -183,4 +214,5 @@ public class FirebaseUtils {
             }
         });
     }
+
 }
