@@ -103,23 +103,8 @@ public class SmsUtils {
             if (found) {
                 return found; 
             }
-            // It's now good! Thanks. ok sawa logging out.
-            //I need to log here.... or maybe once this becomes true I stop looping???
-            // Yes as soon as it is true you can break
-            // In the SO there's an example they have shared that uses Pattern
 
-            // Yes just seen it, you could also return as soon as you get it. - How would this look??
-            // that means found will need to be true initially??
-            // [ "sent","bought","AMWithdraw","paid","PMWithdraw"].contains(msg) Is there something like this in Java. I don't think you should loop.
-            // Let me try and check if Pattern has such a
         }
-        // Let me test that 
-        // C
-        // public static boolean stringContainsItemFromList(String inputStr, String[] items) {
-        //     return Arrays.stream(items).parallel().anyMatch(inputStr::contains);
-        // } https://stackoverflow.com/questions/8992100/test-if-a-string-contains-any-of-the-strings-from-an-array
-
-        
         return found;
     }
 
@@ -196,7 +181,7 @@ public class SmsUtils {
         }
         return formattedAmount;
     }
-    public static void uploadMessagesToFirebase(MpesaMessage message){
+    public static void uploadMessageToFirebase(MpesaMessage message){
 
 
     }
