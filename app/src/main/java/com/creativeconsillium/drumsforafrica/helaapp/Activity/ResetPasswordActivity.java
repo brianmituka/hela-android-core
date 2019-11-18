@@ -2,6 +2,7 @@ package com.creativeconsillium.drumsforafrica.helaapp.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,15 +21,17 @@ private Button button;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
-        EditText email = (EditText) findViewById(R.id.reset);
+        final EditText email = (EditText) findViewById(R.id.reset);
         Button button = (Button) findViewById(R.id.btnReset);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseUtils.resetPassword(ResetPasswordActivity.this,email);
-                loginIntoApp();
+
             }
         });
     }
+
+
 }
