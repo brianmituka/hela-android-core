@@ -153,7 +153,7 @@ public class FirebaseUtils {
         UiUtils.showDialog("Updating changes", activity);
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        firebaseUser.updateProfile()
+//        firebaseUser.updateProfile()
 
 
 
@@ -177,7 +177,7 @@ public class FirebaseUtils {
 
         String emailString = email.getText().toString();
         String passwordString = password.getText().toString();
-        UiUtils.showDialog("Signing In", activity);
+//        UiUtils.showDialog("Signing In", activity);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseAuth.signInWithEmailAndPassword(emailString, passwordString).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
