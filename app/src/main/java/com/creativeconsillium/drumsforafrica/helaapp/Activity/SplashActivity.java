@@ -9,6 +9,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.FirebaseUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.PermissionsUtils;
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.SmsUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.R;
 
 public class SplashActivity extends AppCompatActivity {
@@ -44,6 +45,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 /* Create an Intent that will start the Menu-Activity. */
+                SmsUtils.getMpesaMessages(getApplicationContext());
                 openHome();
             }
         }, SPLASH_DISPLAY_LENGTH);

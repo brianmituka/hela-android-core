@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.MpesaMessage;
+import com.google.firebase.database.DatabaseReference;
 
 import org.joda.time.LocalDate;
 
@@ -182,6 +183,11 @@ public class SmsUtils {
         return formattedAmount;
     }
     public static void uploadMessageToFirebase(MpesaMessage message){
+        String userId = FirebaseUtils.getCurrentUser().getUid();
+        String userEmail = FirebaseUtils.getCurrentUser().getEmail();
+        Log.i(TAG, "Uploading messages for " + userEmail );
+        DatabaseReference transactionReference = FirebaseUtils.createDatabaseRef("transactions");
+//        transactionReference.child(userId).
 
 
     }
