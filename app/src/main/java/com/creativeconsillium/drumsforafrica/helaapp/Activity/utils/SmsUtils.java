@@ -39,7 +39,7 @@ public class SmsUtils {
    static String transactionCode;
    static LocalDate formattedDate;
 
-
+//get messages mpesa messages from inbox
     public static  void getMpesaMessages (Context context) {
         sqlClause = SmsUtils.ADDRESS_COLUMN + " like ? ";
         selectionAgrument[0] = "MPESA";
@@ -93,6 +93,8 @@ public class SmsUtils {
         }
         return found;
     }
+
+    //get out going message details from mpesa by checking for keywords
     public static boolean getOutgoingMpesaMessages(String message){
         boolean found = false;
         String[] moneyOutKeywords = {
@@ -108,7 +110,7 @@ public class SmsUtils {
         }
         return found;
     }
-
+//determine whether the mpesa message is a money in or out taking message as param
     public static String mpesaMessageType(String message){
 
         if (getOutgoingMpesaMessages(message)){
@@ -122,7 +124,7 @@ public class SmsUtils {
 
         return transactionType;
     }
-
+//extract mpesa code and takes mpesa message as param and returns code from the message
     public static String extractMpesaCode(String message){
         String transactionCoderegex = "^[A-Za-z0-9]\\w+.";
         Pattern mpesaCodePattern = Pattern.compile(transactionCoderegex);
@@ -141,7 +143,7 @@ public class SmsUtils {
         return transactionCode;
     }
 
-
+//extact mpesa date taking the mpesa message as paramteter and returns formatted date
     public static LocalDate extractMpesaDate(String message){
         String mpesaMessageDate = "";
         String mpesaDateRegex = "[0-3]?[0-9]/[0-3]?[0-9]/(?:[0-9]{2})?[0-9]{2}";
@@ -162,6 +164,8 @@ public class SmsUtils {
         return formattedDate;
 
     }
+
+    //extract amount from an mpesa message
     public static BigDecimal extractMpesaAmount(String message){
         String mpesaAmount = "";
         String mpesaAmountRegex = "Ksh\\d+,?\\d+\\.?\\d*";
@@ -182,6 +186,8 @@ public class SmsUtils {
         }
         return formattedAmount;
     }
+
+    //upload mpesa message details to firebase
     public static void uploadMessageToFirebase(MpesaMessage message){
         String userId = FirebaseUtils.getCurrentUser().getUid();
         String userEmail = FirebaseUtils.getCurrentUser().getEmail();
