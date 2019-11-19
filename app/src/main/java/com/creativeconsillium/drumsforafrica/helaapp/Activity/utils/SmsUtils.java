@@ -1,5 +1,6 @@
 package com.creativeconsillium.drumsforafrica.helaapp.Activity.utils;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,6 +9,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.MpesaMessage;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 
 import org.joda.time.LocalDate;
@@ -15,8 +18,11 @@ import org.joda.time.LocalDate;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import androidx.annotation.NonNull;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -38,7 +44,8 @@ public class SmsUtils {
    static String transactionType;
    static String transactionCode;
    static LocalDate formattedDate;
-
+   static String mpesaAmount;
+    static String mpesaMessageDate;
 
     public static  void getMpesaMessages (Context context) {
         sqlClause = SmsUtils.ADDRESS_COLUMN + " like ? ";
@@ -66,7 +73,8 @@ public class SmsUtils {
            // System.out.println("Sender:: " + sender + " Message ::" + message + " On:: " + date);
             Log.i(TAG, "code:: " + extractMpesaCode(message) + " date " + extractMpesaDate(message) +
                   " amount:: " + extractMpesaAmount(message) + " type:: " + mpesaMessageType(message) + " message "   );
-            MpesaMessage mpesaMessage = new MpesaMessage(extractMpesaCode(message), extractMpesaAmount(message), extractMpesaDate(message), mpesaMessageType(message));
+            MpesaMessage mpesaMessage = new MpesaMessage(extractMpesaCode(message), extractMpesaAmount(message)      , extractMpesaDate(message), mpesaMessageType(message));
+            uploadMessageToFirebase(mpesaMessage);
             //extractMpesaCode(message);
             //extractMpesaDate(message);
             //extractMpesaAmount(message);
@@ -142,8 +150,7 @@ public class SmsUtils {
     }
 
 
-    public static LocalDate extractMpesaDate(String message){
-        String mpesaMessageDate = "";
+    public static String extractMpesaDate(String message){
         String mpesaDateRegex = "[0-3]?[0-9]/[0-3]?[0-9]/(?:[0-9]{2})?[0-9]{2}";
         Pattern mpesaDatePattern = Pattern.compile(mpesaDateRegex);
         Matcher m = mpesaDatePattern.matcher(message);
@@ -159,11 +166,10 @@ public class SmsUtils {
             Log.i(TAG, "no matches found!!");
         }
 
-        return formattedDate;
+        return mpesaMessageDate;
 
     }
-    public static BigDecimal extractMpesaAmount(String message){
-        String mpesaAmount = "";
+    public static String extractMpesaAmount(String message){
         String mpesaAmountRegex = "Ksh\\d+,?\\d+\\.?\\d*";
         Pattern mpesaAmountPattern = Pattern.compile(mpesaAmountRegex);
         Matcher m = mpesaAmountPattern.matcher(message);
@@ -180,14 +186,26 @@ public class SmsUtils {
         }else {
             Log.i(TAG, "No matches found!!!");
         }
-        return formattedAmount;
+        return mpesaAmount;
     }
-    public static void uploadMessageToFirebase(MpesaMessage message){
+    public static void uploadMessageToFirebase(final MpesaMessage message){
+//        UiUtils.showDialog("Hela is setting up",activity );
         String userId = FirebaseUtils.getCurrentUser().getUid();
         String userEmail = FirebaseUtils.getCurrentUser().getEmail();
         Log.i(TAG, "Uploading messages for " + userEmail );
+        Map<String, Object> messageValues = message.toMap();
         DatabaseReference transactionReference = FirebaseUtils.createDatabaseRef("transactions");
-//        transactionReference.child(userId).
+        transactionReference.child(userId).push().updateChildren(messageValues).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    Log.i(TAG, "Message uploaded successfully" + message);
+                }else{
+                    Log.i(TAG, "An error occured" + task.getException().getMessage());
+                }
+
+            }
+        });
 
 
     }
