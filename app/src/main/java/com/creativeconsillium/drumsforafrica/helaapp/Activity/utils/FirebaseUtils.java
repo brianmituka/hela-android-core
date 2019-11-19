@@ -156,9 +156,6 @@ public class FirebaseUtils {
 //        firebaseUser.updateProfile()
 
 
-
-
-
     }
 
 
@@ -184,16 +181,16 @@ public class FirebaseUtils {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    UiUtils.hideDialog();
+                UiUtils.hideDialog();
                    ;
                     Toast.makeText(activity, "Login successful ",
                             Toast.LENGTH_SHORT).show();
                     Log.i(TAG, "Login successful");
 
                 }else {
-//                    UiUtils.hideDialog();
+                //    UiUtils.hideDialog();
                     String errorText = task.getException().getMessage();
-                    UiUtils.hideDialog();
+//                    UiUtils.hideDialog();
                     Toast.makeText(activity, errorText,
                             Toast.LENGTH_SHORT).show();
                 }

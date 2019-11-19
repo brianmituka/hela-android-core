@@ -47,6 +47,8 @@ public class SmsUtils {
    static String mpesaAmount;
     static String mpesaMessageDate;
 
+
+//get messages mpesa messages from inbox
     public static  void getMpesaMessages (Context context) {
         sqlClause = SmsUtils.ADDRESS_COLUMN + " like ? ";
         selectionAgrument[0] = "MPESA";
@@ -101,6 +103,8 @@ public class SmsUtils {
         }
         return found;
     }
+
+    //get out going message details from mpesa by checking for keywords
     public static boolean getOutgoingMpesaMessages(String message){
         boolean found = false;
         String[] moneyOutKeywords = {
@@ -116,7 +120,7 @@ public class SmsUtils {
         }
         return found;
     }
-
+//determine whether the mpesa message is a money in or out taking message as param
     public static String mpesaMessageType(String message){
 
         if (getOutgoingMpesaMessages(message)){
@@ -130,7 +134,7 @@ public class SmsUtils {
 
         return transactionType;
     }
-
+//extract mpesa code and takes mpesa message as param and returns code from the message
     public static String extractMpesaCode(String message){
         String transactionCoderegex = "^[A-Za-z0-9]\\w+.";
         Pattern mpesaCodePattern = Pattern.compile(transactionCoderegex);
