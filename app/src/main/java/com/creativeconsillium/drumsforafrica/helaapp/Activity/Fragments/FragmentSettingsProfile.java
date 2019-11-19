@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -19,11 +21,12 @@ public class FragmentSettingsProfile extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
         View vFragSettingsProfile = inflater.inflate(R.layout.fragment_settings_profile, container, false);
         initializeVariablesAndUIObjects(vFragSettingsProfile);
 
-        return vFragSettingsProfile;
+
+          return vFragSettingsProfile;
+
     }
 
 

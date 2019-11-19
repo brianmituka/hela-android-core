@@ -13,7 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.ResetPasswordActivity"></activity>
+        <activity android:name=".Activity.SettingsProfileActivity"></activity>
+        <activity android:name=".Activity.SettingsProfileActivity.java" />
+        <activity android:name=".Activity.ResetPasswordActivity" />
         <activity android:name=".Activity.AskPermissionActivity" />
         <activity
             android:name=".Activity.HomeActivity"

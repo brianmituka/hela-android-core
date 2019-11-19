@@ -10,27 +10,26 @@ import android.widget.EditText;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.FirebaseUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.R;
 
-public class ResetPasswordActivity extends AppCompatActivity {
-private   EditText email;
-private Button button;
-
-
+public class SettingsProfileActivity extends AppCompatActivity {
+    private EditText name;
+    private EditText phone;
+    private EditText email;
+    private Button button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reset_password);
-
-        final EditText email = (EditText) findViewById(R.id.reset);
-        Button button = (Button) findViewById(R.id.btnReset);
-
+        name = (EditText) findViewById(R.id.editText);
+        phone = (EditText) findViewById(R.id.editText2);
+        email = (EditText) findViewById(R.id.editText4);
+        button = (Button) findViewById(R.id.button7);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseUtils.resetPassword(ResetPasswordActivity.this,email);
 
+                FirebaseUtils.updateUserProfile(SettingsProfileActivity.this,name,phone,email);
+                //UiUtils.hideDialog();
+                //openBudgetChoice();
             }
         });
     }
-
-
 }
