@@ -1,53 +1,56 @@
 package com.creativeconsillium.drumsforafrica.helaapp.Activity.Model;
 
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
+
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.joda.time.LocalDate;
 
+@IgnoreExtraProperties
 public class MpesaMessage {
 private String transactionCode;
-private BigDecimal amount;
-private LocalDate date;
+private String amount;
+private String date;
 private String transactionTyp;
+private  String message;
 
     public MpesaMessage() {
     }
 
-    public MpesaMessage(String transactionCode, BigDecimal amount, LocalDate date, String transactionTyp) {
+    public MpesaMessage(String transactionCode, String amount, String date, String transactionTyp) {
         this.transactionCode = transactionCode;
         this.amount = amount;
         this.date = date;
         this.transactionTyp = transactionTyp;
     }
 
-    public String getTransactionCode() {
-        return transactionCode;
+
+    /**
+     * This field is excluded from the database
+     */
+    @Exclude
+    public Map<String, Object> toMap(){
+        HashMap<String, Object> transaction = new HashMap<>();
+        transaction.put("transactionCode", transactionCode);
+        transaction.put("amount", amount);
+        transaction.put("date", date);
+        transaction.put("transactionType", transactionTyp);
+
+        return transaction;
     }
 
-    public void setTransactionCode(String transactionCode) {
-        this.transactionCode = transactionCode;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public String getTransactionTyp() {
-        return transactionTyp;
-    }
-
-    public void setTransactionTyp(String transactionTyp) {
-        this.transactionTyp = transactionTyp;
+    @Exclude
+    @Override
+    public String toString() {
+        return "MpesaMessage{" +
+                "transactionCode='" + transactionCode + '\'' +
+                ", amount=" + amount +
+                ", date=" + date +
+                ", transactionTyp='" + transactionTyp + '\'' +
+                ", message='" + message + '\'' +
+                '}';
     }
 }
