@@ -3,12 +3,14 @@ package com.creativeconsillium.drumsforafrica.helaapp.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.FirebaseUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.PermissionsUtils;
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.PreferenceUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.SmsUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.R;
 
@@ -17,6 +19,7 @@ public class SplashActivity extends AppCompatActivity {
     /** Duration of wait **/
     private final int SPLASH_DISPLAY_LENGTH = 2000;
     PermissionsUtils permissionsUtils = new PermissionsUtils();
+    String TAG = SplashActivity.class.getSimpleName();
 
 
 
@@ -45,7 +48,12 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 /* Create an Intent that will start the Menu-Activity. */
-                SmsUtils.getMpesaMessages(getApplicationContext());
+                if (!PreferenceUtils.isMpesaSynced(getApplicationContext())){
+                    SmsUtils.getMpesaMessages(getApplicationContext(), SplashActivity.this);
+                } else {
+                    Log.i(TAG,"Mpesa messages Synced...." );
+                }
+
                 openHome();
             }
         }, SPLASH_DISPLAY_LENGTH);
