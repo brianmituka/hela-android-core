@@ -12,6 +12,7 @@ import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.FirebaseUtil
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.PermissionsUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.PreferenceUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.SmsUtils;
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.UiUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.R;
 
 public class SplashActivity extends AppCompatActivity {
@@ -28,14 +29,10 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         Boolean permissions = permissionsUtils.checkPermissions(SplashActivity.this);
-        System.out.println(">>>>>>> " + permissions);
     if (permissions && !FirebaseUtils.isLoggedIn()){
-        /* New Handler to start the Menu-Activity
-         * and close this Splash-Screen after some seconds.*/
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
-                /* Create an Intent that will start the Menu-Activity. */
                 Intent mainIntent = new Intent(SplashActivity.this, SplashChoiceActivity.class);
                 SplashActivity.this.startActivity(mainIntent);
                 SplashActivity.this.finish();
@@ -47,31 +44,17 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
-                /* Create an Intent that will start the Menu-Activity. */
-                if (!PreferenceUtils.isMpesaSynced(getApplicationContext())){
-                    SmsUtils.getMpesaMessages(getApplicationContext(), SplashActivity.this);
-                } else {
-                    Log.i(TAG,"Mpesa messages Synced...." );
-                }
-
                 openHome();
             }
         }, SPLASH_DISPLAY_LENGTH);
-
-
     } else {
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
-                /* Create an Intent that will start the Menu-Activity. */
                 goToPermissionsActivity();
             }
         }, SPLASH_DISPLAY_LENGTH);
-
     }
-
-
-
     }
    void goToPermissionsActivity () {
        Intent permissionsIntent = new Intent(SplashActivity.this, AskPermissionActivity.class);
@@ -84,6 +67,4 @@ public class SplashActivity extends AppCompatActivity {
         startActivity(i);
         this.finish();
     }
-
-
 }
