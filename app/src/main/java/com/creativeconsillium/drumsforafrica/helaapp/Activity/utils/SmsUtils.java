@@ -49,8 +49,7 @@ public class SmsUtils {
 
 
 //get messages mpesa messages from inbox
-    public static  void getMpesaMessages (Context context, Activity activity) {
-        UiUtils.showDialog("Hela is Setting up", activity);
+    public static  void getMpesaMessages (Context context) {
         sqlClause = SmsUtils.ADDRESS_COLUMN + " like ? ";
         selectionAgrument[0] = "MPESA";
 
@@ -70,9 +69,9 @@ public class SmsUtils {
         cursor.moveToFirst();
 
         do {
-            String sender = cursor.getString(cursor.getColumnIndex(SmsUtils.ADDRESS_COLUMN));
+           // String sender = cursor.getString(cursor.getColumnIndex(SmsUtils.ADDRESS_COLUMN));
             String message = cursor.getString(cursor.getColumnIndexOrThrow(SmsUtils.BODY_COLUMN));
-            String date = cursor.getString(cursor.getColumnIndexOrThrow(SmsUtils.DATE_COLUMN));
+            // String date = cursor.getString(cursor.getColumnIndexOrThrow(SmsUtils.DATE_COLUMN));
            // System.out.println("Sender:: " + sender + " Message ::" + message + " On:: " + date);
             Log.i(TAG, "code:: " + extractMpesaCode(message) + " date " + extractMpesaDate(message) +
                   " amount:: " + extractMpesaAmount(message) + " type:: " + mpesaMessageType(message) + " message "   );
@@ -87,7 +86,6 @@ public class SmsUtils {
          * in firebase
          */
       PreferenceUtils.saveBooleanSharedPreference(context, PreferenceUtils.MPESA_MESSAGES_SYNCED, true);
-      UiUtils.hideDialog();
     }
 
     //Create methods to sort the message based on the messagebody;
