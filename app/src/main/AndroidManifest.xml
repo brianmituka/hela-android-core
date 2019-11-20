@@ -13,8 +13,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.SettingsProfileActivity"></activity>
-        <activity android:name=".Activity.SettingsProfileActivity.java" />
+        <receiver
+            android:name=".Activity.Mpesa"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            </intent-filter>
+
+        </receiver>
+
+        <activity android:name=".Activity.SettingsProfileActivity" />
+<!--        <activity android:name=".Activity.SettingsProfileActivity.java" />-->
         <activity android:name=".Activity.ResetPasswordActivity" />
         <activity android:name=".Activity.AskPermissionActivity" />
         <activity
@@ -43,6 +53,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW"/>
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
