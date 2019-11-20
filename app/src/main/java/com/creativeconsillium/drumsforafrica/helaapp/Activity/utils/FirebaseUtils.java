@@ -147,7 +147,7 @@ public class FirebaseUtils {
 
     //Update user profile
     public static void updateUserProfile(final Activity activity, EditText name, EditText phone, EditText email){
-        String nameString  = email.getText().toString();
+        String nameString  = name.getText().toString();
         String phoneNumberString = phone.getText().toString();
         String emailString = email.getText().toString();
         UiUtils.showDialog("Updating changes", activity);
