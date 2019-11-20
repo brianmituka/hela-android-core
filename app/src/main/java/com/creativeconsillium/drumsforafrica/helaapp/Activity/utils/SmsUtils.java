@@ -49,7 +49,8 @@ public class SmsUtils {
 
 
 //get messages mpesa messages from inbox
-    public static  void getMpesaMessages (Context context) {
+    public static  void getMpesaMessages (Context context, Activity activity) {
+        UiUtils.showDialog("Hela is Setting up", activity);
         sqlClause = SmsUtils.ADDRESS_COLUMN + " like ? ";
         selectionAgrument[0] = "MPESA";
 
@@ -75,17 +76,18 @@ public class SmsUtils {
            // System.out.println("Sender:: " + sender + " Message ::" + message + " On:: " + date);
             Log.i(TAG, "code:: " + extractMpesaCode(message) + " date " + extractMpesaDate(message) +
                   " amount:: " + extractMpesaAmount(message) + " type:: " + mpesaMessageType(message) + " message "   );
-            MpesaMessage mpesaMessage = new MpesaMessage(extractMpesaCode(message), extractMpesaAmount(message)      , extractMpesaDate(message), mpesaMessageType(message));
-            uploadMessageToFirebase(mpesaMessage);
-            //extractMpesaCode(message);
-            //extractMpesaDate(message);
-            //extractMpesaAmount(message);
-            //mpesaMessageType(message);
-
-
+            MpesaMessage mpesaMessage = new MpesaMessage(extractMpesaCode(message), extractMpesaAmount(message), extractMpesaDate(message), mpesaMessageType(message));
+                uploadMessageToFirebase(mpesaMessage);
         } while (cursor.moveToNext());
         cursor.close();
-       // return MpesaMessages;
+        /**
+         * We use this to ensure that all previous Mpesa messaages the
+         * user had before installing the app have all been synced, because we
+         * willl be relying on the SMS_RECEIVED broadcast to update the transactions
+         * in firebase
+         */
+      PreferenceUtils.saveBooleanSharedPreference(context, PreferenceUtils.MPESA_MESSAGES_SYNCED, true);
+      UiUtils.hideDialog();
     }
 
     //Create methods to sort the message based on the messagebody;
