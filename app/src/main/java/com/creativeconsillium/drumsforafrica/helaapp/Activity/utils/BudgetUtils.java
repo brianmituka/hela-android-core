@@ -11,7 +11,7 @@ public class BudgetUtils {
     //database reference to push to firebase
 
     public static DatabaseReference getBudgetReference (){
-        DatabaseReference budgetReference = FirebaseUtils.createDatabaseRef("budgets");
+        DatabaseReference budgetReference = FirebaseUtils.createOrGetDatabaseRef("budgets");
         return budgetReference;
     }
 
