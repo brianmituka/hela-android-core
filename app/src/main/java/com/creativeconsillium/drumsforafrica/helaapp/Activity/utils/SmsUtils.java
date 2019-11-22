@@ -198,7 +198,7 @@ public class SmsUtils {
         String userEmail = FirebaseUtils.getCurrentUser().getEmail();
         Log.i(TAG, "Uploading messages for " + userEmail );
         Map<String, Object> messageValues = message.toMap();
-        DatabaseReference transactionReference = FirebaseUtils.createDatabaseRef("transactions");
+        DatabaseReference transactionReference = FirebaseUtils.createOrGetDatabaseRef("transactions");
         transactionReference.child(userId).push().updateChildren(messageValues).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
