@@ -27,6 +27,25 @@ private  String message;
         this.transactionTyp = transactionTyp;
     }
 
+    public String getTransactionCode() {
+        return transactionCode;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getTransactionTyp() {
+        return transactionTyp;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 
     /**
      * This field is excluded from the database
