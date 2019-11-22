@@ -3,6 +3,7 @@ package com.creativeconsillium.drumsforafrica.helaapp.Activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,6 +20,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Interface.InterfaceBudgets;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.PreferenceUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.SmsUtils;
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.TransactionsUtil;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.UiUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -60,13 +62,16 @@ public class HomeActivity extends AppCompatActivity implements InterfaceBudgets 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+
+    }
+    @Override
+    protected void onResume(){
+        TransactionsUtil.getTotalTransactionsByMonth();
         if (!PreferenceUtils.isMpesaSynced(getApplicationContext())){
-            UiUtils.showDialog("Hela is Setting up", HomeActivity.this);
-            Log.i(TAG, "DIALOG SHOULD BE SHOWING");
-            SmsUtils.getMpesaMessages(getApplicationContext());
-            UiUtils.hideDialog();
+            new uploadMessages().execute();
         }
 
+        super.onResume();
     }
 
 
@@ -126,7 +131,27 @@ public class HomeActivity extends AppCompatActivity implements InterfaceBudgets 
         codeToSetUpFragmentBudgetsDetail();
 
     }
+    private class uploadMessages extends AsyncTask<Void, Void, Void>{
 
-    //  [END]: InterfaceBudgets
+        @Override
+        protected void onPreExecute() {
+            UiUtils.showDialog("Hela is setting up", HomeActivity.this);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0){
+            SmsUtils.getMpesaMessages(getApplicationContext());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            UiUtils.hideDialog();
+            super.onPostExecute(aVoid);
+        }
+    }
+
+
 
 }
