@@ -33,20 +33,42 @@ public class TransactionsUtil {
                 addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        MpesaMessage transactions = dataSnapshot.getValue(MpesaMessage.class);
-                        for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                            String date = snapshot.child("date").getValue().toString();
-                            LocalDate formattedDate = FormatUtils.formatDate(date);
-                            String year = FormatUtils.getYearFromDate(formattedDate);
-                            String month = FormatUtils.getMonthFromDate(formattedDate);
-                            Log.i(TAG, "The dates are:: " + snapshot.child("date").getValue() + " and the year is: "
-                                    + year + " the month is: " + month);
-                            
+                        if (dataSnapshot.hasChildren()){
+                            for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                                String date = snapshot.child("date").getValue().toString();
+                                String amount = snapshot.child("amount").getValue().toString();
+                                String transactionTYpe = snapshot.child("transactionType").getValue().toString();
+                                LocalDate formattedDate = FormatUtils.formatDate(date);
+                                String year = FormatUtils.getYearFromDate(formattedDate);
+                                String month = FormatUtils.getMonthFromDate(formattedDate);
+                                String current = FormatUtils.getCurrentMonth();
+                                if (year.equals(FormatUtils.getCurrentYear()) && month.equals(current) ){
+                                    Log.i(TAG, "The type is " + transactionTYpe );
+                                    if (transactionTYpe.equals("out") && transactionTYpe !=null){
+                                        Log.i(TAG, "Out amount:: " + amount );
+
+                                    }else if (transactionTYpe.equals("in") && transactionTYpe !=null){
+                                       Log.i(TAG, "In amount:: " + amount);
+
+                                    }
+                                   // Log.i(TAG, "here are the matched transactions " + snapshot.getValue());
+                                }
+                                //else {
+                                   // Log.i(TAG, "Not for " + current + " " + FormatUtils.getCurrentYear() + snapshot.getValue());
+                                //}
+
+
+//                                Log.i(TAG, "The dates are:: " + snapshot.child("date").getValue() + " and the year is: "
+//                                        + year + " the month is: " + month);
+
+                            }
                         }
+
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.i(TAG, databaseError.getMessage());
 
                     }
                 });
