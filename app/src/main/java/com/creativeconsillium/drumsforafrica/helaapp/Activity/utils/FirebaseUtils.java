@@ -32,11 +32,12 @@ public class FirebaseUtils {
 
 
     //   Initialize database and access write-location
-    public static DatabaseReference createDatabaseRef(String node) {
+    public static DatabaseReference createOrGetDatabaseRef(String node) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference(node);
         return reference;
     }
+
 
     public static void createAccount(final Activity activity, EditText email, EditText password, EditText name, final EditText phoneNumber) {
         final String nameString = name.getText().toString();
@@ -100,7 +101,7 @@ public class FirebaseUtils {
         String phoneNumberString = phoneNumber.getText().toString();
         Log.i(TAG, "Saving " + getCurrentUser().getDisplayName() + "Phone Number");
         User user = new User(phoneNumberString);
-        DatabaseReference userDetailsReference = createDatabaseRef("user_details");
+        DatabaseReference userDetailsReference = createOrGetDatabaseRef("user_details");
 
         userDetailsReference.child(userID).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
