@@ -46,9 +46,9 @@ public class SmsUtils {
    static LocalDate formattedDate;
    static String mpesaAmount;
     static String mpesaMessageDate;
+    static boolean isValidMpesaMessage;
 
 
-//get messages mpesa messages from inbox
     public static  void getMpesaMessages (Context context) {
         sqlClause = SmsUtils.ADDRESS_COLUMN + " like ? ";
         selectionAgrument[0] = "MPESA";
@@ -69,10 +69,7 @@ public class SmsUtils {
         cursor.moveToFirst();
 
         do {
-           // String sender = cursor.getString(cursor.getColumnIndex(SmsUtils.ADDRESS_COLUMN));
             String message = cursor.getString(cursor.getColumnIndexOrThrow(SmsUtils.BODY_COLUMN));
-            // String date = cursor.getString(cursor.getColumnIndexOrThrow(SmsUtils.DATE_COLUMN));
-           // System.out.println("Sender:: " + sender + " Message ::" + message + " On:: " + date);
             Log.i(TAG, "code:: " + extractMpesaCode(message) + " date " + extractMpesaDate(message) +
                   " amount:: " + extractMpesaAmount(message) + " type:: " + mpesaMessageType(message) + " message "   );
             MpesaMessage mpesaMessage = new MpesaMessage(extractMpesaCode(message), extractMpesaAmount(message), extractMpesaDate(message), mpesaMessageType(message));
@@ -88,7 +85,7 @@ public class SmsUtils {
       PreferenceUtils.saveBooleanSharedPreference(context, PreferenceUtils.MPESA_MESSAGES_SYNCED, true);
     }
 
-    //Create methods to sort the message based on the messagebody;
+
     public static boolean getIncomingMpesaMessages(String message){
         boolean found = false;
         String[] moneyInKeyWords = {
@@ -98,13 +95,12 @@ public class SmsUtils {
             Pattern keywordPattern = Pattern.compile(moneyInKeyWords[i]);
             found = keywordPattern.matcher(message).find();
             if (found) {
-                return found; 
+                return found;
             }
         }
         return found;
     }
 
-    //get out going message details from mpesa by checking for keywords
     public static boolean getOutgoingMpesaMessages(String message){
         boolean found = false;
         String[] moneyOutKeywords = {
@@ -120,35 +116,26 @@ public class SmsUtils {
         }
         return found;
     }
-//determine whether the mpesa message is a money in or out taking message as param
     public static String mpesaMessageType(String message){
 
         if (getOutgoingMpesaMessages(message)){
            transactionType = "out";
-          // Log.i(TAG, "the transaction::moneyout " + message + "is " + transactionType );
         }
         if (getIncomingMpesaMessages(message)){
           transactionType = "in";
-           // Log.i(TAG, "the transaction::moneyin " + message + "is " + transactionType );
         }
 
         return transactionType;
     }
-//extract mpesa code and takes mpesa message as param and returns code from the message
+
     public static String extractMpesaCode(String message){
         String transactionCoderegex = "^[A-Za-z0-9]\\w+.";
         Pattern mpesaCodePattern = Pattern.compile(transactionCoderegex);
         Matcher m = mpesaCodePattern.matcher(message);
-        if (m.find()) {
-            //Log.i(TAG, mpesaCodePattern + " matches " + m.group(0) + " " + message);
-            /**
-             * m.group(0) returns the matched character
-             */
+        if (m.find()&&isValidMpesaMessage(message)) {
             transactionCode  = m.group(0);
-           // Log.i(TAG, "the transaction code is:: " + transactionCode + " " + message);
         } else {
             Log.i(TAG, "No match found");
-
         }
         return transactionCode;
     }
@@ -158,11 +145,7 @@ public class SmsUtils {
         String mpesaDateRegex = "[0-3]?[0-9]/[0-3]?[0-9]/(?:[0-9]{2})?[0-9]{2}";
         Pattern mpesaDatePattern = Pattern.compile(mpesaDateRegex);
         Matcher m = mpesaDatePattern.matcher(message);
-        if (m.find()){
-            //Log.i(TAG, mpesaDatePattern + " matches " + m.group(0) + " " + message);
-            /**
-             * m.group(0) returns the matched character
-             */
+        if (m.find()&&isValidMpesaMessage(message)){
             mpesaMessageDate  = m.group(0);
             formattedDate = FormatUtils.formatDate(mpesaMessageDate);
             Log.i(TAG, "the formatted transaction date is::" + formattedDate);
@@ -177,23 +160,16 @@ public class SmsUtils {
         String mpesaAmountRegex = "Ksh\\d+,?\\d+\\.?\\d*";
         Pattern mpesaAmountPattern = Pattern.compile(mpesaAmountRegex);
         Matcher m = mpesaAmountPattern.matcher(message);
-        if (m.find()){
-            //Log.i(TAG, mpesaAmountPattern + " matches " + m.group(0) + " " + message);
+        if (m.find()&&isValidMpesaMessage(message)){
             mpesaAmount = m.group(0).replaceAll("Ksh|,?", "");
-
-           // Log.i(TAG, "mpesa amount " + mpesaAmount);
             formattedAmount = FormatUtils.formatMpesaAmount(mpesaAmount);
             Log.i(TAG, "The formatted amount is:: " + formattedAmount);
-
-           // Log.i(TAG, "The other that matches:: " + m.group(1));
-           // Log.i(TAG, "The amount is:: " + mpesaAmount + " " + message);
         }else {
             Log.i(TAG, "No matches found!!!");
         }
         return mpesaAmount;
     }
     public static void uploadMessageToFirebase(final MpesaMessage message){
-//        UiUtils.showDialog("Hela is setting up",activity );
         String userId = FirebaseUtils.getCurrentUser().getUid();
         String userEmail = FirebaseUtils.getCurrentUser().getEmail();
         Log.i(TAG, "Uploading messages for " + userEmail );
@@ -212,5 +188,25 @@ public class SmsUtils {
         });
 
 
+    }
+    public static boolean isValidMpesaMessage(String message){
+       // String invalidMessage = "^[^A-Za-z0-9]\\w+.";
+        String[] invalidMessageRegex = {
+          "Your M-PESA balance was Ksh\\d+,?\\d+\\.?\\d*"
+        };
+        //Pattern invalidMessagePattern = Pattern.compile(invalidMessage);
+       for (String invalidMessage: invalidMessageRegex) {
+            Pattern invalidMessagePattern = Pattern.compile(invalidMessage);
+            Matcher validMessageMatcher = invalidMessagePattern.matcher(message);
+            if (validMessageMatcher.find()){
+                isValidMpesaMessage = false;
+                Log.i(TAG, "Not a valid message " + message);
+            }else {
+                isValidMpesaMessage = true;
+                Log.i(TAG, "Valid mpesa message " + message);
+            }
+
+        }
+        return isValidMpesaMessage;
     }
 }
