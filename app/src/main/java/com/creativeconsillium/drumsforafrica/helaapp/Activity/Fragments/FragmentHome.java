@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.FormatUtils;
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.TransactionsUtil;
 import com.creativeconsillium.drumsforafrica.helaapp.R;
 
 public class FragmentHome extends Fragment {
@@ -26,6 +29,7 @@ public class FragmentHome extends Fragment {
 
         View vFragHome = inflater.inflate(R.layout.fragment_home, container, false);
         initializeVariablesAndUIObjects(vFragHome);
+        TransactionsUtil.getTotalForCurrentMonthAndYear(vFragHome);
 
         return vFragHome;
     }
@@ -41,6 +45,14 @@ public class FragmentHome extends Fragment {
      * @param fragmentLayout                                    (View)
      */
     private void initializeVariablesAndUIObjects(@NonNull View fragmentLayout) {
+        TextView currentDate = (TextView) fragmentLayout.findViewById(R.id.currentMonthYear);
+        TextView spentMonthYear = (TextView) fragmentLayout.findViewById(R.id.spentMonthYear);
+        TextView currentYear = (TextView) fragmentLayout.findViewById(R.id.currentYear);
+        String dateString = FormatUtils.getCurrentMonth() + " " + FormatUtils.getCurrentYear();
+        String currentYearString = FormatUtils.getCurrentYear();
+        currentDate.setText(dateString);
+        currentYear.setText(currentYearString);
+        spentMonthYear.setText(dateString);
 
         CardView cardSummary = fragmentLayout.findViewById(R.id.cardHomeSummary);
         cardSummary.setOnClickListener(clkHomeSummary);
