@@ -11,6 +11,7 @@ import android.util.Log;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.MpesaMessage;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.FirebaseUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.SmsUtils;
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.TransactionsUtil;
 
 public class Mpesa extends BroadcastReceiver {
 
@@ -30,6 +31,7 @@ public class Mpesa extends BroadcastReceiver {
                    String transactionType = SmsUtils.mpesaMessageType(messagebody);
                    MpesaMessage messageToUpload = new MpesaMessage(transactionCode, amount, date, transactionType);
                    SmsUtils.uploadMessageToFirebase(messageToUpload);
+//                   TransactionsUtil.getTotalTransactionsByMonth();
                }else {
                    Log.i(TAG, "It is not an mpesa message");
                }
