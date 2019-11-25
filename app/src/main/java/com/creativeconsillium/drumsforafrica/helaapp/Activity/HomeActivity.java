@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Interface.InterfaceBudgets;
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.FormatUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.PreferenceUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.SmsUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.TransactionsUtil;
@@ -29,6 +31,7 @@ public class HomeActivity extends AppCompatActivity implements InterfaceBudgets 
 
     private FragmentTransaction ftHome;
     String TAG = HomeActivity.class.getSimpleName();
+
 
 
     @Override
@@ -62,14 +65,15 @@ public class HomeActivity extends AppCompatActivity implements InterfaceBudgets 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-
     }
     @Override
     protected void onResume(){
-        TransactionsUtil.getTotalTransactionsByMonth();
+
+
         if (!PreferenceUtils.isMpesaSynced(getApplicationContext())){
             new uploadMessages().execute();
         }
+        //new uploadMessages().execute();
 
         super.onResume();
     }
@@ -143,6 +147,8 @@ public class HomeActivity extends AppCompatActivity implements InterfaceBudgets 
         @Override
         protected Void doInBackground(Void... arg0){
             SmsUtils.getMpesaMessages(getApplicationContext());
+
+//            TransactionsUtil.getTransactionSummary();
             return null;
         }
 
