@@ -33,9 +33,8 @@ public class FirebaseUtils {
 
     //   Initialize database and access write-location
     public static DatabaseReference createOrGetDatabaseRef(String node) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference(node);
-        return reference;
+       final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        return database.getReference(node);
     }
 
 
