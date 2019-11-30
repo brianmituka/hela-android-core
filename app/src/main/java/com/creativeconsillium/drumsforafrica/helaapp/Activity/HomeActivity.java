@@ -73,8 +73,6 @@ public class HomeActivity extends AppCompatActivity implements InterfaceBudgets 
         if (!PreferenceUtils.isMpesaSynced(getApplicationContext())){
             new uploadMessages().execute();
         }
-        //new uploadMessages().execute();
-
         super.onResume();
     }
 
@@ -147,6 +145,9 @@ public class HomeActivity extends AppCompatActivity implements InterfaceBudgets 
         @Override
         protected Void doInBackground(Void... arg0){
             SmsUtils.getMpesaMessages(getApplicationContext());
+            TransactionsUtil.getMonthReceivedAmount();
+            TransactionsUtil.getMonthSpentAmount();
+
 
 //            TransactionsUtil.getTransactionSummary();
             return null;
