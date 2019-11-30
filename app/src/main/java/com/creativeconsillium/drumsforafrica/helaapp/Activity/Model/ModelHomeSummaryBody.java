@@ -1,5 +1,7 @@
 package com.creativeconsillium.drumsforafrica.helaapp.Activity.Model;
 
+import java.math.BigDecimal;
+
 /**
  * Model class for Home Summary - Body section data.
  *
@@ -11,8 +13,8 @@ public class ModelHomeSummaryBody {
 
     private String sMonthName;
 
-    private double dAmountReceived;
-    private double dAmountSpent;
+    private BigDecimal dAmountReceived;
+    private BigDecimal dAmountSpent;
 
 
     public ModelHomeSummaryBody() {}
@@ -26,20 +28,19 @@ public class ModelHomeSummaryBody {
         this.sMonthName = sMonthName;
     }
 
-    public double getdAmountReceived() {
+    public BigDecimal getdAmountReceived() {
         return dAmountReceived;
     }
 
-    public void setdAmountReceived(double dAmountReceived) {
+    public void setdAmountReceived(BigDecimal dAmountReceived) {
         this.dAmountReceived = dAmountReceived;
     }
 
-    public double getdAmountSpent() {
+    public BigDecimal getdAmountSpent() {
         return dAmountSpent;
     }
 
-    public void setdAmountSpent(double dAmountSpent) {
+    public void setdAmountSpent(BigDecimal dAmountSpent) {
         this.dAmountSpent = dAmountSpent;
     }
-
 }
