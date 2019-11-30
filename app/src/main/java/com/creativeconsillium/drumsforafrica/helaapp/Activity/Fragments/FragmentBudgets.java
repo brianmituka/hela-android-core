@@ -1,6 +1,8 @@
 package com.creativeconsillium.drumsforafrica.helaapp.Activity.Fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +24,7 @@ import com.creativeconsillium.drumsforafrica.helaapp.Activity.Adapter.AdapterRVB
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.ModelBudgets;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.BudgetUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.FormatUtils;
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.UiUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
@@ -174,10 +177,7 @@ public class FragmentBudgets extends Fragment {
 
                 case R.id.btnAddBudgetCreateBudget:
                     //  TODO: Save Budget here.
-
-                    Log.i(TAG, "Name " + edBudgetName.getText().toString() + " Amount " + edMonthlyLimit.getText().toString() + " IsRePEAT " + swtMonthlyRepeat.isChecked());
-                    ModelBudgets budget = new ModelBudgets(edBudgetName.getText().toString(), swtMonthlyRepeat.isChecked(),edMonthlyLimit.getText().toString());
-                    BudgetUtils.createAndSaveBudget(budget, getActivity());
+                    new CreateBudget().execute(edBudgetName.getText().toString(),swtMonthlyRepeat.isChecked(), edMonthlyLimit.getText().toString());
 
                     edBudgetName.setText("");
                     edMonthlyLimit.setText("");
@@ -209,5 +209,30 @@ public class FragmentBudgets extends Fragment {
         }
 
     };
+
+    private class CreateBudget extends AsyncTask<Object, Void, Void>{
+        @Override
+        protected void onPreExecute() {
+            UiUtils.showDialog("Creating Budget", getActivity());
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Object... params) {
+            String budgetName = (String) params[0];
+            String amount = (String) params[2];
+            boolean isRecurring = (boolean) params[1];
+            Log.i(TAG, "Name " + budgetName + " Amount " + amount + " IsRePEAT " + isRecurring);
+            ModelBudgets budget = new ModelBudgets(budgetName, isRecurring,amount);
+            BudgetUtils.createAndSaveBudget(budget);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            UiUtils.hideDialog();
+            super.onPostExecute(aVoid);
+        }
+    }
 
 }
