@@ -49,7 +49,7 @@ public class FormatUtils {
        return month;
     }
     public static String getYearFromDate(LocalDate date){
-        Log.i("TAG", "the date is " + date);
+       // Log.i("TAG", "the date is " + date);
         if (date!=null){
             year = getFormatter("yyy").print(date);
         }
@@ -70,13 +70,13 @@ public class FormatUtils {
         LocalDate date = LocalDate.now();
        // Log.i(TAG, "I have been hit");
         currentMonth = getFormatter("MMM").print(date);
-        Log.i(TAG, "the current month is " + currentMonth);
+//        Log.i(TAG, "the current month is " + currentMonth);
         return currentMonth;
     }
     public static String getCurrentYear(){
         LocalDate date = LocalDate.now();
         currentYear = getFormatter("yyy").print(date);
-        Log.i(TAG, "the current year is:: " + currentYear);
+//        Log.i(TAG, "the current year is:: " + currentYear);
         return currentYear;
 
     }
