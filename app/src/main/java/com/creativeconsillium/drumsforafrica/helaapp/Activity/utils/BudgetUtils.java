@@ -1,5 +1,6 @@
 package com.creativeconsillium.drumsforafrica.helaapp.Activity.utils;
 
+import android.app.Activity;
 import android.util.Log;
 import android.widget.EditText;
 
@@ -28,14 +29,15 @@ public class BudgetUtils {
         return budgetReference;
     }
 
-    public static void createAndSaveBudget(ModelBudgets budget){
-        Map<String, Object> budgetValue = budget.toMap();
-
+    public static void createAndSaveBudget(ModelBudgets budget, Activity activity){
+        final Map<String, Object> budgetValue = budget.toMap();
+        UiUtils.showDialog("Creating Budget", activity);
         getUserBudgetReference().push().updateChildren(budgetValue).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
-                    Log.i(TAG, "Budget Uploaded successfully " + task.getException());
+                    UiUtils.hideDialog();
+                    Log.i(TAG, "Budget Uploaded successfully " + budgetValue);
                 }else {
                     Log.i(TAG, "An Error Occured " + task.getException());
                 }
