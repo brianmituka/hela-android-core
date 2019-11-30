@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.ModelHomeSummaryBody;
 import com.creativeconsillium.drumsforafrica.helaapp.R;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 /**
@@ -56,8 +57,8 @@ public class AdapterRVHomeSummaryBody extends RecyclerView.Adapter<AdapterRVHome
     public void onBindViewHolder(@NonNull RVHomeSummaryBodyViewHolder holder, int position) {
 
         String sMonthName = arylHomeSummaryBodyItems.get(position).getsMonthName();
-        double dAmountReceived = arylHomeSummaryBodyItems.get(position).getdAmountReceived();
-        double dAmountSpent = arylHomeSummaryBodyItems.get(position).getdAmountSpent();
+        BigDecimal dAmountReceived = arylHomeSummaryBodyItems.get(position).getdAmountReceived();
+        BigDecimal dAmountSpent = arylHomeSummaryBodyItems.get(position).getdAmountSpent();
 
         String sAmountReceived = "KSH " + dAmountReceived;
         String sAmountSpent = "KSH " + dAmountSpent;
