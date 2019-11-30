@@ -29,14 +29,13 @@ public class BudgetUtils {
         return budgetReference;
     }
 
-    public static void createAndSaveBudget(ModelBudgets budget, Activity activity){
+    public static void createAndSaveBudget(ModelBudgets budget){
         final Map<String, Object> budgetValue = budget.toMap();
-        UiUtils.showDialog("Creating Budget", activity);
+
         getUserBudgetReference().push().updateChildren(budgetValue).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
-                    UiUtils.hideDialog();
                     Log.i(TAG, "Budget Uploaded successfully " + budgetValue);
                 }else {
                     Log.i(TAG, "An Error Occured " + task.getException());
