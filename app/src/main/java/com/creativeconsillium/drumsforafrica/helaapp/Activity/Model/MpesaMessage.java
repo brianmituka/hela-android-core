@@ -15,16 +15,18 @@ private String transactionCode;
 private String amount;
 private String date;
 private String transactionTyp;
-private  String message;
+private String name;
+
 
     public MpesaMessage() {
     }
 
-    public MpesaMessage(String transactionCode, String amount, String date, String transactionTyp) {
+    public MpesaMessage(String transactionCode, String amount, String date, String transactionTyp, String name) {
         this.transactionCode = transactionCode;
         this.amount = amount;
         this.date = date;
         this.transactionTyp = transactionTyp;
+        this.name = name;
     }
 
     public String getTransactionCode() {
@@ -43,8 +45,24 @@ private  String message;
         return transactionTyp;
     }
 
-    public String getMessage() {
-        return message;
+    public void setTransactionCode(String transactionCode) {
+        this.transactionCode = transactionCode;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setTransactionTyp(String transactionTyp) {
+        this.transactionTyp = transactionTyp;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -57,6 +75,7 @@ private  String message;
         transaction.put("amount", amount);
         transaction.put("date", date);
         transaction.put("transactionType", transactionTyp);
+        transaction.put("name", name);
 
         return transaction;
     }
@@ -69,7 +88,7 @@ private  String message;
                 ", amount=" + amount +
                 ", date=" + date +
                 ", transactionTyp='" + transactionTyp + '\'' +
-                ", message='" + message + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }
