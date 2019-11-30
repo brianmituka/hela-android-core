@@ -126,5 +126,6 @@
     <string name="request_for_permissions_message">For Hela to function properly, it requires to access Your M-PESA messages. Without the permissions to read SMS, Hela
     will not function properly.</string>
     <string name="jan">Jan</string>
+    <string name="no_budgets">You have no budgets. Please create one</string>
 
 </resources>
