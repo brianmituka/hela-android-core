@@ -2,6 +2,7 @@ package com.creativeconsillium.drumsforafrica.helaapp.Activity.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -18,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Adapter.AdapterRVBudgets;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.ModelBudgets;
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.BudgetUtils;
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.FormatUtils;
 import com.creativeconsillium.drumsforafrica.helaapp.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
@@ -29,7 +33,10 @@ public class FragmentBudgets extends Fragment {
     private List<ModelBudgets> lsBudgets;
 
     private BottomSheetBehavior bsbAddBudgetBottomSheet;
-
+    public String TAG = FragmentBudgets.class.getSimpleName();
+    EditText edBudgetName;
+    EditText edMonthlyLimit;
+    Switch swtMonthlyRepeat;
 
     @Override
     public void onAttach(Context context) {
@@ -63,8 +70,16 @@ public class FragmentBudgets extends Fragment {
         codeToPrepareBudgetsData();
 
         AdapterRVBudgets clsAdapterBudgets = new AdapterRVBudgets(getContext(), lsBudgets);
+        String dateString = FormatUtils.getCurrentMonth() + " " + FormatUtils.getCurrentYear();
+        TextView budgetMonthYear = (TextView) fragmentLayout.findViewById(R.id.budgetMonthYear);
+        budgetMonthYear.setText(dateString);
+
 
         RecyclerView rvBudgets = fragmentLayout.findViewById(R.id.recyclerViewBudgets);
+        TextView noBudgets = fragmentLayout.findViewById(R.id.nobudgets);
+        if (lsBudgets.isEmpty()){
+            noBudgets.setVisibility(View.VISIBLE);
+        }
         rvBudgets.setOnClickListener(clkBudgetsDetail);
 
         Button btnAddBudgets = fragmentLayout.findViewById(R.id.btnBudgetsAddBudget);
@@ -98,10 +113,10 @@ public class FragmentBudgets extends Fragment {
         ImageView imgvClose = (ImageView) bottomSheetLayout.findViewById(R.id.imgvAddBudgetClose);
         imgvClose.setOnClickListener(clkAddBudget);
 
-        EditText edBudgetName = (EditText) bottomSheetLayout.findViewById(R.id.edAddBudgetName);
-        EditText edMonthlyLimit = (EditText) bottomSheetLayout.findViewById(R.id.edAddBudgetMonthlyLimit);
+         edBudgetName = (EditText) bottomSheetLayout.findViewById(R.id.edAddBudgetName);
+         edMonthlyLimit = (EditText) bottomSheetLayout.findViewById(R.id.edAddBudgetMonthlyLimit);
 
-        Switch swtMonthlyRepeat = (Switch) bottomSheetLayout.findViewById(R.id.swtAddBudgetMonthlyRepeat);
+         swtMonthlyRepeat = (Switch) bottomSheetLayout.findViewById(R.id.swtAddBudgetMonthlyRepeat);
 
         Button btnSaveBudget = (Button) bottomSheetLayout.findViewById(R.id.btnAddBudgetCreateBudget);
         btnSaveBudget.setOnClickListener(clkAddBudget);
@@ -109,6 +124,10 @@ public class FragmentBudgets extends Fragment {
     }
 
     private void codeToPrepareBudgetsData() {
+
+        /**
+         * Display the data here
+         */
 
         lsBudgets.add(new ModelBudgets("Food", "3 Transactions", "KSH 10,000", "KSH 3,000"));
         lsBudgets.add(new ModelBudgets("Transport", "10 Transactions", "KSH 8,000", "KSH 2,000"));
@@ -156,6 +175,13 @@ public class FragmentBudgets extends Fragment {
                 case R.id.btnAddBudgetCreateBudget:
                     //  TODO: Save Budget here.
 
+                    Log.i(TAG, "Name " + edBudgetName.getText().toString() + " Amount " + edMonthlyLimit.getText().toString() + " IsRePEAT " + swtMonthlyRepeat.isChecked());
+                    ModelBudgets budget = new ModelBudgets(edBudgetName.getText().toString(), swtMonthlyRepeat.isChecked(),edMonthlyLimit.getText().toString());
+                    BudgetUtils.createAndSaveBudget(budget, getActivity());
+
+                    edBudgetName.setText("");
+                    edMonthlyLimit.setText("");
+                    swtMonthlyRepeat.setChecked(false);
                     bsbAddBudgetBottomSheet.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
                     break;
