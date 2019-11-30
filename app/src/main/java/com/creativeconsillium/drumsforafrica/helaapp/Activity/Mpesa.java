@@ -25,11 +25,13 @@ public class Mpesa extends BroadcastReceiver {
                if (mesage.getOriginatingAddress().equals("MPESA")){
                    Log.i(TAG, "A new Mpesa Message has arrived");
                    String messagebody = mesage.getMessageBody();
-                   String date = SmsUtils.extractMpesaDate(messagebody);
-                   String amount = SmsUtils.extractMpesaAmount(messagebody);
-                   String transactionCode = SmsUtils.extractMpesaCode(messagebody);
-                   String transactionType = SmsUtils.mpesaMessageType(messagebody);
-                   MpesaMessage messageToUpload = new MpesaMessage(transactionCode, amount, date, transactionType);
+                   MpesaMessage messageToUpload = new MpesaMessage();
+                   messageToUpload.setTransactionTyp(SmsUtils.mpesaMessageType(messagebody));
+                   messageToUpload.setTransactionCode(SmsUtils.extractMpesaCode(messagebody));
+                   messageToUpload.setDate(SmsUtils.extractMpesaDate(messagebody));
+                   messageToUpload.setAmount(SmsUtils.extractMpesaAmount(messagebody));
+
+                   //MpesaMessage messageToUpload = new MpesaMessage(transactionCode, amount, date, transactionType);
                    SmsUtils.uploadMessageToFirebase(messageToUpload);
 //                   TransactionsUtil.getTotalTransactionsByMonth();
                }else {
