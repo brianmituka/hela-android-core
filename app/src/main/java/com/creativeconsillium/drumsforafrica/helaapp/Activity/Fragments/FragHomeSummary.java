@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Adapter.AdapterRVHomeSummary;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.ModelHomeSummary;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.ModelHomeSummaryBody;
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.FormatUtils;
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.TransactionsUtil;
 import com.creativeconsillium.drumsforafrica.helaapp.R;
 
 import java.util.ArrayList;
@@ -95,63 +97,63 @@ public class FragHomeSummary extends Fragment {
 
         ModelHomeSummaryBody clsModelHomeSumarryBody0 = new ModelHomeSummaryBody();
         clsModelHomeSumarryBody0.setsMonthName("JAN");
-        clsModelHomeSumarryBody0.setdAmountReceived(10000);
-        clsModelHomeSumarryBody0.setdAmountSpent(2000);
+        clsModelHomeSumarryBody0.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("JAN"));
+        clsModelHomeSumarryBody0.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("JAN"));
 
         ModelHomeSummaryBody clsModelHomeSumarryBody1 = new ModelHomeSummaryBody();
         clsModelHomeSumarryBody1.setsMonthName("FEB");
-        clsModelHomeSumarryBody1.setdAmountReceived(10000);
-        clsModelHomeSumarryBody1.setdAmountSpent(2000);
+        clsModelHomeSumarryBody1.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("FEB"));
+        clsModelHomeSumarryBody1.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("FEB"));
 
         ModelHomeSummaryBody clsModelHomeSumarryBody2 = new ModelHomeSummaryBody();
         clsModelHomeSumarryBody2.setsMonthName("MAR");
-        clsModelHomeSumarryBody2.setdAmountReceived(10000);
-        clsModelHomeSumarryBody2.setdAmountSpent(2000);
+        clsModelHomeSumarryBody2.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("MAR"));
+        clsModelHomeSumarryBody2.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("MAR"));
 
         ModelHomeSummaryBody clsModelHomeSumarryBody3 = new ModelHomeSummaryBody();
         clsModelHomeSumarryBody3.setsMonthName("APR");
-        clsModelHomeSumarryBody3.setdAmountReceived(100000);
-        clsModelHomeSumarryBody3.setdAmountSpent(20000);
+        clsModelHomeSumarryBody3.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("APR"));
+        clsModelHomeSumarryBody3.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("APR"));
 
         ModelHomeSummaryBody clsModelHomeSumarryBody4 = new ModelHomeSummaryBody();
         clsModelHomeSumarryBody4.setsMonthName("MAY");
-        clsModelHomeSumarryBody4.setdAmountReceived(20000);
-        clsModelHomeSumarryBody4.setdAmountSpent(3000);
+        clsModelHomeSumarryBody4.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("MAY"));
+        clsModelHomeSumarryBody4.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("MAY"));
 
         ModelHomeSummaryBody clsModelHomeSumarryBody5 = new ModelHomeSummaryBody();
         clsModelHomeSumarryBody5.setsMonthName("JUN");
-        clsModelHomeSumarryBody5.setdAmountReceived(15000);
-        clsModelHomeSumarryBody5.setdAmountSpent(2500);
+        clsModelHomeSumarryBody5.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("JUN"));
+        clsModelHomeSumarryBody5.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("JUN"));
 
         ModelHomeSummaryBody clsModelHomeSumarryBody6 = new ModelHomeSummaryBody();
         clsModelHomeSumarryBody6.setsMonthName("JUL");
-        clsModelHomeSumarryBody6.setdAmountReceived(30000);
-        clsModelHomeSumarryBody6.setdAmountSpent(3000);
+        clsModelHomeSumarryBody6.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("JUL"));
+        clsModelHomeSumarryBody6.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("JUL"));
 
         ModelHomeSummaryBody clsModelHomeSumarryBody7 = new ModelHomeSummaryBody();
         clsModelHomeSumarryBody7.setsMonthName("AUG");
-        clsModelHomeSumarryBody7.setdAmountReceived(500000);
-        clsModelHomeSumarryBody7.setdAmountSpent(40000);
+        clsModelHomeSumarryBody7.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("AUG"));
+        clsModelHomeSumarryBody7.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("AUG"));
 
         ModelHomeSummaryBody clsModelHomeSumarryBody8 = new ModelHomeSummaryBody();
         clsModelHomeSumarryBody8.setsMonthName("SEP");
-        clsModelHomeSumarryBody8.setdAmountReceived(2000);
-        clsModelHomeSumarryBody8.setdAmountSpent(100);
+        clsModelHomeSumarryBody8.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("SEP"));
+        clsModelHomeSumarryBody8.setdAmountSpent(TransactionsUtil.getReceivedTransactionsByMonth("SEP"));
 
         ModelHomeSummaryBody clsModelHomeSumarryBody9 = new ModelHomeSummaryBody();
         clsModelHomeSumarryBody9.setsMonthName("OCT");
-        clsModelHomeSumarryBody9.setdAmountReceived(10000);
-        clsModelHomeSumarryBody9.setdAmountSpent(6000);
+        clsModelHomeSumarryBody9.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("OCT"));
+        clsModelHomeSumarryBody9.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("OCT"));
 
         ModelHomeSummaryBody clsModelHomeSumarryBody10 = new ModelHomeSummaryBody();
         clsModelHomeSumarryBody10.setsMonthName("NOV");
-        clsModelHomeSumarryBody10.setdAmountReceived(10000);
-        clsModelHomeSumarryBody10.setdAmountSpent(2000);
+        clsModelHomeSumarryBody10.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("NOV"));
+        clsModelHomeSumarryBody10.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("NOV"));
 
         ModelHomeSummaryBody clsModelHomeSumarryBody11 = new ModelHomeSummaryBody();
         clsModelHomeSumarryBody11.setsMonthName("DEC");
-        clsModelHomeSumarryBody11.setdAmountReceived(0);
-        clsModelHomeSumarryBody11.setdAmountSpent(0);
+        clsModelHomeSumarryBody11.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("DEC"));
+        clsModelHomeSumarryBody11.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("DEC"));
 
         ArrayList<ModelHomeSummaryBody> arylSummaryBodies2019 = new ArrayList<>();
         arylSummaryBodies2019.add(clsModelHomeSumarryBody0);
@@ -182,7 +184,7 @@ public class FragHomeSummary extends Fragment {
         arylSummaryBodies2018.add(clsModelHomeSumarryBody11);
 
         ModelHomeSummary clsModelHomeSummary2019 = new ModelHomeSummary();
-        clsModelHomeSummary2019.setsYear("2019");
+        clsModelHomeSummary2019.setsYear(FormatUtils.getCurrentYear());
         clsModelHomeSummary2019.setdAmountReceived(500000);
         clsModelHomeSummary2019.setdAmountSpent(20000);
         clsModelHomeSummary2019.setArylHomeSummaryBodyItems(arylSummaryBodies2019);
