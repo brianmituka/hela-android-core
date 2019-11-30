@@ -72,7 +72,11 @@ public class SmsUtils {
             String message = cursor.getString(cursor.getColumnIndexOrThrow(SmsUtils.BODY_COLUMN));
             Log.i(TAG, "code:: " + extractMpesaCode(message) + " date " + extractMpesaDate(message) +
                   " amount:: " + extractMpesaAmount(message) + " type:: " + mpesaMessageType(message) + " message "   );
-            MpesaMessage mpesaMessage = new MpesaMessage(extractMpesaCode(message), extractMpesaAmount(message), extractMpesaDate(message), mpesaMessageType(message));
+            MpesaMessage mpesaMessage = new MpesaMessage();
+            mpesaMessage.setTransactionCode(extractMpesaCode(message));
+            mpesaMessage.setAmount(extractMpesaAmount(message));
+            mpesaMessage.setDate(extractMpesaDate(message));
+            mpesaMessage.setTransactionTyp(mpesaMessageType(message));
                 uploadMessageToFirebase(mpesaMessage);
         } while (cursor.moveToNext());
         cursor.close();
