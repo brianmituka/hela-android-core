@@ -46,12 +46,12 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        android:id="@+id/textView27"
+                        android:id="@+id/budgetMonthYear"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="16dp"
-                        android:text="@string/october_2019"
+                        android:text=""
                         android:textColor="@color/colorTextBlack"
                         android:textSize="20sp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -65,11 +65,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
                         android:layout_marginEnd="32dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView27"
-                        app:layout_constraintEnd_toStartOf="@+id/textView27"
+                        app:layout_constraintBottom_toBottomOf="@+id/budgetMonthYear"
+                        app:layout_constraintEnd_toStartOf="@+id/budgetMonthYear"
                         app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/textView27"
+                        app:layout_constraintTop_toTopOf="@+id/budgetMonthYear"
                         app:srcCompat="@drawable/caret_back" />
 
                     <ImageView
@@ -78,11 +78,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
                         android:layout_marginEnd="32dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView27"
+                        app:layout_constraintBottom_toBottomOf="@+id/budgetMonthYear"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/textView27"
-                        app:layout_constraintTop_toTopOf="@+id/textView27"
+                        app:layout_constraintStart_toEndOf="@+id/budgetMonthYear"
+                        app:layout_constraintTop_toTopOf="@+id/budgetMonthYear"
                         app:srcCompat="@drawable/caret_next" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -100,98 +100,112 @@
                     app:layout_constraintTop_toBottomOf="@+id/btnBudgetsAddBudget" />
 
                 <TextView
-                    android:id="@+id/textView36"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="@string/titleSummary"
-                    android:textColor="@color/colorTextBlack"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:text="@string/no_budgets"
+                    android:id="@+id/nobudgets"
+                    app:layout_constraintTop_toBottomOf="@+id/btnBudgetsAddBudget"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="30dp"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recyclerViewBudgets" />
+                    android:textColor="@color/colorTextBlack"
+                    />
 
-                <View
-                    android:id="@+id/divider7"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@color/colorTextBlack"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView36" />
+<!--                <TextView-->
+<!--                    android:id="@+id/textView36"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    android:layout_marginTop="30dp"-->
+<!--                    android:layout_marginEnd="16dp"-->
+<!--                    android:text="@string/titleSummary"-->
+<!--                    android:textColor="@color/colorTextBlack"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:textStyle="bold"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/recyclerViewBudgets" />-->
 
-                <TextView
-                    android:id="@+id/textView38"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/ksh_18_000"
-                    android:textColor="@color/colorAlternative"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline6"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/divider7" />
+<!--                <View-->
+<!--                    android:id="@+id/divider7"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="1dp"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    android:layout_marginTop="8dp"-->
+<!--                    android:layout_marginEnd="16dp"-->
+<!--                    android:background="@color/colorTextBlack"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/textView36" />-->
 
-                <TextView
-                    android:id="@+id/textView39"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="32dp"
-                    android:text="@string/labelReceived"
-                    android:textColor="@color/colorAlternative"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline6"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView38" />
+<!--                <TextView-->
+<!--                    android:id="@+id/textView38"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    android:layout_marginTop="8dp"-->
+<!--                    android:layout_marginEnd="8dp"-->
+<!--                    android:text="@string/ksh_18_000"-->
+<!--                    android:textColor="@color/colorAlternative"-->
+<!--                    android:textSize="18sp"-->
+<!--                    android:textStyle="bold"-->
+<!--                    app:layout_constraintEnd_toStartOf="@+id/guideline6"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/divider7" />-->
 
-                <TextView
-                    android:id="@+id/textView40"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="@string/ksh_5_000"
-                    android:textAlignment="textEnd"
-                    android:textColor="@color/colorRedWarning"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/guideline6"
-                    app:layout_constraintTop_toBottomOf="@+id/divider7" />
+<!--                <TextView-->
+<!--                    android:id="@+id/textView39"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    android:layout_marginEnd="8dp"-->
+<!--                    android:layout_marginBottom="32dp"-->
+<!--                    android:text="@string/labelReceived"-->
+<!--                    android:textColor="@color/colorAlternative"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toStartOf="@+id/guideline6"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/textView38" />-->
 
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.5" />
+<!--                <TextView-->
+<!--                    android:id="@+id/textView40"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="8dp"-->
+<!--                    android:layout_marginTop="8dp"-->
+<!--                    android:layout_marginEnd="16dp"-->
+<!--                    android:text="@string/ksh_5_000"-->
+<!--                    android:textAlignment="textEnd"-->
+<!--                    android:textColor="@color/colorRedWarning"-->
+<!--                    android:textSize="18sp"-->
+<!--                    android:textStyle="bold"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="@+id/guideline6"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/divider7" />-->
 
-                <TextView
-                    android:id="@+id/textView45"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="32dp"
-                    android:text="@string/labelRemaining"
-                    android:textAlignment="textEnd"
-                    android:textColor="@color/colorRedWarning"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/guideline6"
-                    app:layout_constraintTop_toBottomOf="@+id/textView40" />
+<!--                <androidx.constraintlayout.widget.Guideline-->
+<!--                    android:id="@+id/guideline6"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical"-->
+<!--                    app:layout_constraintGuide_percent="0.5" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/textView45"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="8dp"-->
+<!--                    android:layout_marginEnd="16dp"-->
+<!--                    android:layout_marginBottom="32dp"-->
+<!--                    android:text="@string/labelRemaining"-->
+<!--                    android:textAlignment="textEnd"-->
+<!--                    android:textColor="@color/colorRedWarning"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="@+id/guideline6"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/textView40" />-->
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
