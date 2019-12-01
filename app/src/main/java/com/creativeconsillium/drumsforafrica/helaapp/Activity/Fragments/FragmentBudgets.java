@@ -70,19 +70,19 @@ public class FragmentBudgets extends Fragment {
     private void initializeVariablesAndUIObjects(@NonNull View fragmentLayout) {
 
         lsBudgets = new ArrayList<>();
-        codeToPrepareBudgetsData();
-
-        AdapterRVBudgets clsAdapterBudgets = new AdapterRVBudgets(getContext(), lsBudgets);
+        //codeToPrepareBudgetsData();
+        BudgetUtils.getUserBudgets();
+        TextView noBudgets = fragmentLayout.findViewById(R.id.nobudgets);
+        if (BudgetUtils.getUserBudgets().isEmpty()){
+            noBudgets.setVisibility(View.VISIBLE);
+        }
+        AdapterRVBudgets clsAdapterBudgets = new AdapterRVBudgets(getContext(), BudgetUtils.getUserBudgets());
         String dateString = FormatUtils.getCurrentMonth() + " " + FormatUtils.getCurrentYear();
         TextView budgetMonthYear = (TextView) fragmentLayout.findViewById(R.id.budgetMonthYear);
         budgetMonthYear.setText(dateString);
 
 
         RecyclerView rvBudgets = fragmentLayout.findViewById(R.id.recyclerViewBudgets);
-        TextView noBudgets = fragmentLayout.findViewById(R.id.nobudgets);
-        if (lsBudgets.isEmpty()){
-            noBudgets.setVisibility(View.VISIBLE);
-        }
         rvBudgets.setOnClickListener(clkBudgetsDetail);
 
         Button btnAddBudgets = fragmentLayout.findViewById(R.id.btnBudgetsAddBudget);
@@ -222,8 +222,9 @@ public class FragmentBudgets extends Fragment {
             String budgetName = (String) params[0];
             String amount = (String) params[2];
             boolean isRecurring = (boolean) params[1];
-            Log.i(TAG, "Name " + budgetName + " Amount " + amount + " IsRePEAT " + isRecurring);
-            ModelBudgets budget = new ModelBudgets(budgetName, isRecurring,amount);
+            String currentMonthYear = FormatUtils.getCurrentYearAndMonth();
+            Log.i(TAG, "Name " + budgetName + " Amount " + amount + " IsRePEAT " + isRecurring + " monthYear " + currentMonthYear);
+            ModelBudgets budget = new ModelBudgets(budgetName, "1 Transaction","KSH 0", "KSH 0", isRecurring, amount, currentMonthYear);
             BudgetUtils.createAndSaveBudget(budget);
             return null;
         }
