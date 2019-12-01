@@ -48,11 +48,13 @@ public class FragmentHome extends Fragment {
         TextView currentDate = (TextView) fragmentLayout.findViewById(R.id.currentMonthYear);
         TextView spentMonthYear = (TextView) fragmentLayout.findViewById(R.id.spentMonthYear);
         TextView currentYear = (TextView) fragmentLayout.findViewById(R.id.currentYear);
+        TextView budgetMonth = (TextView) fragmentLayout.findViewById(R.id.textDate);
         String dateString = FormatUtils.getCurrentMonth() + " " + FormatUtils.getCurrentYear();
         String currentYearString = FormatUtils.getCurrentYear();
         currentDate.setText(dateString);
         currentYear.setText(currentYearString);
         spentMonthYear.setText(dateString);
+        budgetMonth.setText(dateString);
 
         CardView cardSummary = fragmentLayout.findViewById(R.id.cardHomeSummary);
         cardSummary.setOnClickListener(clkHomeSummary);
