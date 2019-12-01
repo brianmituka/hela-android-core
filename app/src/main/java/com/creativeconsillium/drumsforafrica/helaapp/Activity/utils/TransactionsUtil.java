@@ -237,6 +237,7 @@ public class TransactionsUtil {
                     TextView monthTotalSpentView = (TextView) fragmentLayout.findViewById(R.id.spentMonthAmount);
                     TextView totalYearSpentView = (TextView) fragmentLayout.findViewById(R.id.yearTotalSpent);
                     TextView totalYearReceivedView = (TextView) fragmentLayout.findViewById(R.id.yearTotalReceived);
+                    TextView budgetSpentAmount = (TextView) fragmentLayout.findViewById(R.id.textAmount);
                     String monthSpentString = "KSH " + monthSpent.toString();
                     String monthReceivedString = "KSH " + monthReceived.toString();
                     String yearSpentString = "KSH " + totalSpent.toString();
@@ -245,6 +246,8 @@ public class TransactionsUtil {
                     monthTotalSpentView.setText(monthSpentString);
                     totalYearReceivedView.setText(yearReceivedString);
                     totalYearSpentView.setText(yearSpentString);
+                    budgetSpentAmount.setText(monthSpentString);
+
                 }
 
             }
