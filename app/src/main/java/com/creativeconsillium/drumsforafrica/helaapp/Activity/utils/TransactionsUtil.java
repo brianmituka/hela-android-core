@@ -42,22 +42,31 @@ public class TransactionsUtil {
     static  BigDecimal totalYearReceived = new BigDecimal(0.00);
     static String currentYear = FormatUtils.getCurrentYear();
    static BigDecimal monthTotalReceived = new BigDecimal(0.00);
+    static BigDecimal monthTotalReceivedUpdated = new BigDecimal(0.00);
    static BigDecimal monthTotalSpent = new BigDecimal(0.00);
+    static BigDecimal monthTotalSpentUpdated = new BigDecimal(0.00);
 
 
     public static void getTransactionsByDate(String Date){
         //this will be used in the d
     }
     public static BigDecimal getSpentTransactionsByMonth(final String month){
+//
         getUserTransactionsReference().child("transactionSummaries").child("allmonthsSpent").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.i(TAG, "I was hit " + month);
                 if (dataSnapshot.hasChild(month)){
+                    Log.i(TAG, "Month is " + month);
                     Object total = dataSnapshot.child(month).getValue();
-                    if (total!=null)
+                    if (total!=null){
                         monthTotalSpent = FormatUtils.formatMpesaAmount(total);
+                        monthTotalSpentUpdated = monthTotalSpent;
+                        Log.i(TAG, " month spent " + monthTotalSpent);
+                    }
                 }
 
+                monthTotalSpent = new BigDecimal(0.00);
 
             }
 
@@ -66,10 +75,11 @@ public class TransactionsUtil {
 
             }
         });
-        return monthTotalSpent;
+        return monthTotalSpentUpdated;
     }
 
     public static  BigDecimal getReceivedTransactionsByMonth(final String month){
+        monthTotalReceived = new BigDecimal(0.00);
         getUserTransactionsReference().child("transactionSummaries").child("allmonthsReceived").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -77,6 +87,7 @@ public class TransactionsUtil {
                     Object total = dataSnapshot.child(month).getValue();
                     if (total!=null)
                         monthTotalReceived = FormatUtils.formatMpesaAmount(total);
+                    Log.i(TAG, " month received>>>> " + monthTotalReceived);
                 }
 
 
@@ -121,9 +132,10 @@ public class TransactionsUtil {
                                 Log.i(TAG, "month in loop " + month + "TransactionMonth " + FormatUtils.getMonthFromDate(formattedDate));
                                 if (TransactionMonth.toLowerCase().equals(month.toLowerCase())) {
                                     Log.i(TAG, "The current year is " + currentYear + "transaction Year " + transactionYear);
-                                    if (transactionType != null && amount != null) {
+                                    if (transactionType != null) {
                                         if (transactionType.equals("out")) {
                                             Log.i(TAG, "I was hit again");
+                                            if (amount != null)
                                             foundSpentTransactions.put(month, FormatUtils.formatMpesaAmount(amount));
                                         }
                                     }
@@ -137,13 +149,13 @@ public class TransactionsUtil {
                 }
                 final HashMap<String, String> cleanSpentTransactions = new HashMap<>();
                 for (String month: foundSpentTransactions.keySet()) {
-                    BigDecimal receivedAmount = new BigDecimal(0.00);
+                    BigDecimal spentAmount = new BigDecimal(0.00);
                     Collection<BigDecimal> amounts = foundSpentTransactions.get(month);
                     for (BigDecimal amount: amounts){
-                        receivedAmount = receivedAmount.add(amount);
+                        spentAmount = spentAmount.add(amount);
                     }
-                    cleanSpentTransactions.put(month, receivedAmount.toString());
-                    Log.i(TAG, "received amount is>>>>> " + receivedAmount + " for " + month + currentYear);
+                    cleanSpentTransactions.put(month, spentAmount.toString());
+                    Log.i(TAG, "received amount is>>>>> " + spentAmount + " for " + month + currentYear);
                 }
                 setMonthlySpentSummaries(cleanSpentTransactions);
             }
@@ -188,9 +200,10 @@ public class TransactionsUtil {
                                 Log.i(TAG, "month in loop " + month + "TransactionMonth " + FormatUtils.getMonthFromDate(formattedDate));
                             if (TransactionMonth.toLowerCase().equals(month.toLowerCase())) {
                                 Log.i(TAG, "The current year is " + currentYear + "transaction Year " + transactionYear);
-                                if (transactionType != null && amount != null) {
+                                if (transactionType != null) {
                                     if (transactionType.equals("in")) {
                                             Log.i(TAG, "I was hit again");
+                                            if (amount != null)
                                         foundTransactions.put(month, FormatUtils.formatMpesaAmount(amount));
                                         }
                                     }
@@ -274,38 +287,47 @@ public class TransactionsUtil {
                                 String transactionYear = FormatUtils.getYearFromDate(formattedDate);
                                 String month = FormatUtils.getMonthFromDate(formattedDate);
                                 String current = FormatUtils.getCurrentMonth();
-                                if (transactionYear.equals(currentYear) && month.equals(current) ){
-                                    Log.i(TAG, "Current Values " + "month spent:: " + totalSpent + " month received " + totalReceived);
-                                   // Log.i(TAG, "The type is " + transactionTYpe );
-                                    if (transactionType!=null&&amount!=null)
-                                    if (transactionType.equals("out")){
+                                if (transactionYear!=null){
+                                    if (transactionYear.equals(currentYear)){
+                                        Log.i(TAG, "Current Values " + "month spent:: " + totalSpent + " month received " + totalReceived);
+                                        // Log.i(TAG, "The type is " + transactionTYpe );
+                                        if (month.equals(current))
+                                            if (amount!=null)
+                                                if (transactionType!=null)
+                                                    if (transactionType.equals("out")){
 //                                        spentAmounts.add(FormatUtils.formatMpesaAmount(amount));
-                                        totalSpent = totalSpent.add(FormatUtils.formatMpesaAmount(amount));
+                                                        totalSpent = totalSpent.add(FormatUtils.formatMpesaAmount(amount));
 
-                                        Log.i(TAG, "totalSpent " + totalSpent + " date:: " + date);
+                                                        Log.i(TAG, "totalSpent " + totalSpent + " date:: " + date);
 
-                                    }else if (transactionType.equals("in")){
+                                                    }else if (transactionType.equals("in")){
 //                                            receivedAmonts.add(FormatUtils.formatMpesaAmount(amount));
-                                        totalReceived = totalReceived.add(FormatUtils.formatMpesaAmount(amount));
-                                       Log.i(TAG, "total Received " + totalReceived + " date:: " + date);
+                                                        totalReceived = totalReceived.add(FormatUtils.formatMpesaAmount(amount));
+                                                        Log.i(TAG, "total Received " + totalReceived + " date:: " + date);
 
+                                                    }
+                                    }
+                                    if (currentYear.equals(transactionYear)){
+                                            Log.i(TAG, "Current Values " + "year spent:: " + totalYearSpent + " year received " + totalYearReceived  );
+                                        if (transactionType!=null)
+                                            if (transactionType.equals("out")){
+                                                if (amount!=null)
+//                                                totalYearSpentAmounts.add(FormatUtils.formatMpesaAmount(amount));
+                                                totalYearSpent = totalYearSpent.add(FormatUtils.formatMpesaAmount(amount));
+                                                Log.i(TAG, "totalYearSpent " + totalYearSpent + " year:: " + date);
+
+                                            }else if (transactionType.equals("in")){
+                                                if (amount!=null)
+//                                                totalYearReceivedAmounts.add(FormatUtils.formatMpesaAmount(amount));
+                                                totalYearReceived = totalYearReceived.add(FormatUtils.formatMpesaAmount(amount));
+                                                Log.i(TAG, "totalYearReceived " + totalYearReceived + " date:: " + date);
+
+                                            }
                                     }
                                 }
-                                if (currentYear.equals(transactionYear)){
-                                    Log.i(TAG, "Current Values " + "year spent:: " + totalYearSpent + " year received " + totalYearReceived  );
-                                    if (transactionType!=null&&amount!=null)
-                                        if (transactionType.equals("out")){
-                                            totalYearSpentAmounts.add(FormatUtils.formatMpesaAmount(amount));
-                                            totalYearSpent = totalYearSpent.add(FormatUtils.formatMpesaAmount(amount));
-                                            Log.i(TAG, "totalYearSpent " + totalYearSpent + " year:: " + date);
 
-                                        }else if (transactionType.equals("in")){
-                                            totalYearReceivedAmounts.add(FormatUtils.formatMpesaAmount(amount));
-                                            totalYearReceived = totalReceived.add(FormatUtils.formatMpesaAmount(amount));
-                                            Log.i(TAG, "totalYearReceived " + totalYearReceived + " date:: " + date);
 
-                                        }
-                                }
+
                             }
                             String monthReceivedString = totalReceived.toString();
                             String monthSpentString = totalSpent.toString();
