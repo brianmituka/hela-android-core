@@ -69,10 +69,12 @@ public class HomeActivity extends AppCompatActivity implements InterfaceBudgets 
     @Override
     protected void onResume(){
 
-
+            Log.i("HOMEMM", " T>>>> " + TransactionsUtil.getSpentTransactionsByMonth("JUL"));
         if (!PreferenceUtils.isMpesaSynced(getApplicationContext())){
             new uploadMessages().execute();
+           // new GetMonthlySummaries().execute();
         }
+        new GetMonthlySummaries().execute();
         super.onResume();
     }
 
@@ -145,11 +147,29 @@ public class HomeActivity extends AppCompatActivity implements InterfaceBudgets 
         @Override
         protected Void doInBackground(Void... arg0){
             SmsUtils.getMpesaMessages(getApplicationContext());
-            TransactionsUtil.getMonthReceivedAmount();
-            TransactionsUtil.getMonthSpentAmount();
-
 
 //            TransactionsUtil.getTransactionSummary();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            UiUtils.hideDialog();
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    private  class GetMonthlySummaries extends AsyncTask<Void, Void, Void>{
+        @Override
+        protected void onPreExecute() {
+            UiUtils.showDialog("Updating summaries", HomeActivity.this);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            TransactionsUtil.getMonthReceivedAmount();
+            TransactionsUtil.getMonthSpentAmount();
             return null;
         }
 
