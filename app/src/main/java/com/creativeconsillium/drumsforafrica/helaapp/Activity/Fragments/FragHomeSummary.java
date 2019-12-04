@@ -138,7 +138,7 @@ public class FragHomeSummary extends Fragment {
         ModelHomeSummaryBody clsModelHomeSumarryBody8 = new ModelHomeSummaryBody();
         clsModelHomeSumarryBody8.setsMonthName("SEP");
         clsModelHomeSumarryBody8.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("SEP"));
-        clsModelHomeSumarryBody8.setdAmountSpent(TransactionsUtil.getReceivedTransactionsByMonth("SEP"));
+        clsModelHomeSumarryBody8.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("SEP"));
 
         ModelHomeSummaryBody clsModelHomeSumarryBody9 = new ModelHomeSummaryBody();
         clsModelHomeSumarryBody9.setsMonthName("OCT");
