@@ -29,22 +29,23 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         Boolean permissions = permissionsUtils.checkPermissions(SplashActivity.this);
-    if (permissions && !FirebaseUtils.isLoggedIn()){
+    if (permissions && FirebaseUtils.isLoggedIn()){
+//        PreferenceUtils.saveBooleanSharedPreference(getApplicationContext(), PreferenceUtils.MPESA_MESSAGES_SYNCED, false);
+        new Handler().postDelayed(new Runnable(){
+            @Override
+            public void run() {
+                openHome();
+            }
+        }, SPLASH_DISPLAY_LENGTH);
+
+    } else if (permissions && !FirebaseUtils.isLoggedIn()){
+
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
                 Intent mainIntent = new Intent(SplashActivity.this, SplashChoiceActivity.class);
                 SplashActivity.this.startActivity(mainIntent);
                 SplashActivity.this.finish();
-            }
-        }, SPLASH_DISPLAY_LENGTH);
-
-    } else if (permissions && FirebaseUtils.isLoggedIn()){
-
-        new Handler().postDelayed(new Runnable(){
-            @Override
-            public void run() {
-                openHome();
             }
         }, SPLASH_DISPLAY_LENGTH);
     } else {
