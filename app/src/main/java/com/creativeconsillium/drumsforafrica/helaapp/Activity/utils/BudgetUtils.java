@@ -26,6 +26,7 @@ public class BudgetUtils {
     public static String TAG = BudgetUtils.class.getSimpleName();
     public static List<ModelBudgets> userBudgets = new ArrayList<>();
     public static List<ModelBudgets> userBudgetsUpdated = new ArrayList<>();
+    public static String budgetCount = "0";
 
     public static DatabaseReference getUserBudgetReference (){
         String userId = FirebaseUtils.getCurrentUser().getUid();
@@ -51,7 +52,7 @@ public class BudgetUtils {
 
     public static List<ModelBudgets> getUserBudgets(){
 
-        getUserBudgetReference().limitToFirst(20).addValueEventListener(new ValueEventListener() {
+        getUserBudgetReference().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChildren()){
@@ -79,6 +80,22 @@ public class BudgetUtils {
             }
         });
         return userBudgetsUpdated;
+    }
+    public static String GetUserBudgetCount(){
+        getUserBudgetReference().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChildren()){
+                   budgetCount = Long.toString(dataSnapshot.getChildrenCount());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+       return budgetCount;
     }
 
    public static void getBudgetRemainingAmount(){
