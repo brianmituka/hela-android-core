@@ -96,7 +96,7 @@ public class FragmentTransactionsReceived extends Fragment {
         int iCurrentYear = calMonthSelected.get(Calendar.YEAR);
 //        String currentMonth = iCurrentMonth
         AdapterRVTransactionsDate clsAdapterTransactionsDate = new AdapterRVTransactionsDate(coxContext, codeToGetDatesInSelectedMonthYear(iCurrentMonth, iCurrentYear));
-        TransactionsUtil.getTransactionsReceivedByMonth(String.valueOf(iCurrentMonth), String.valueOf(iCurrentYear));
+        TransactionsUtil.getTransactionsReceivedByMonthAndYear(String.valueOf(iCurrentMonth), String.valueOf(iCurrentYear));
 
         rvTransactionsDate = (RecyclerView) fragmentLayout.findViewById(R.id.recyclerViewDate);
         RecyclerView.LayoutManager rvlmLayoutManagerDates = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
