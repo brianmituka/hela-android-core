@@ -38,14 +38,10 @@ public class TransactionsUtil {
     static BigDecimal totalSpent = new BigDecimal(0.00);
     static BigDecimal totalReceived = new BigDecimal(0.00);
     static BigDecimal totalYearSpent = new BigDecimal(0.00);
-    static ArrayList<BigDecimal> totalYearReceivedAmounts = new ArrayList<>();
-    static ArrayList<BigDecimal> totalYearSpentAmounts = new ArrayList<>();
     static BigDecimal totalYearReceived = new BigDecimal(0.00);
     static String currentYear = FormatUtils.getCurrentYear();
     static BigDecimal monthTotalReceived = new BigDecimal(0.00);
-    static BigDecimal monthTotalReceivedUpdated = new BigDecimal(0.00);
     static BigDecimal monthTotalSpent = new BigDecimal(0.00);
-    static BigDecimal monthTotalSpentUpdated = new BigDecimal(0.00);
     public static List<MpesaMessage> userReceivedTransactions = new ArrayList<>();
     public static List<MpesaMessage> userReceivedTransactionsUpdated = new ArrayList<>();
     public static List<MpesaMessage> userSpentTransactions = new ArrayList<>();
@@ -56,31 +52,28 @@ public class TransactionsUtil {
         getUserTransactionsReference().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()){
-                    for (DataSnapshot snapshot: dataSnapshot.getChildren()){
+                if (dataSnapshot.hasChildren()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         Object date = snapshot.child("date").getValue();
                         Object transactionType = snapshot.child("transactionType").getValue();
                         LocalDate formattedDate = FormatUtils.formatDate(date);
                         String transactionYear = FormatUtils.getYearFromDate(formattedDate);
                         String TransactionMonth = FormatUtils.getMonthFromDate(formattedDate);
                         Log.i(TAG, "The month and Year are:: " + month + year);
-//                        if (formattedDate == Date){
-//                            if (transactionType == "in"){
-//                                MpesaMessage transaction = snapshot.getValue(MpesaMessage.class);
-//                                userReceivedTransactions.add(transaction);
-//
-//                            }
-//                        }
+                        if (formattedDate == transactionType) {
+                            if (transactionType == "in") {
+                                MpesaMessage transaction = snapshot.getValue(MpesaMessage.class);
+                                userReceivedTransactions.add(transaction);
 
-    public static void getTransactionsByDate(String Date) {
-        //this will be used in the d
+                            }
+                            userReceivedTransactionsUpdated = userReceivedTransactions;
+                            userReceivedTransactions = new ArrayList<>();
+                        } else {
+                            userReceivedTransactions = new ArrayList<>();
+                        }
+
                     }
-                    userReceivedTransactionsUpdated = userReceivedTransactions;
-                    userReceivedTransactions = new ArrayList<>();
-                }else{
-                    userReceivedTransactions = new ArrayList<>();
                 }
-
             }
 
             @Override
@@ -126,6 +119,33 @@ public class TransactionsUtil {
         });
     }
 
+    public static void readReceivedTransactionByMonth(final String month, final FirebaseCallback firebaseCallback) {
+        System.out.println("########## Reading data");
+        getUserTransactionsReference().child("transactionSummaries").child("allmonthsReceived").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.i(TAG, "The month is " + month);
+                Log.i(TAG, "dataSnapshot.hasChild  " + dataSnapshot.hasChild(month));
+                if (dataSnapshot.hasChild(month)) {
+                    Log.i(TAG, "Month is " + month);
+                    Object total = dataSnapshot.child(month).getValue();
+                    System.out.println("Read data total " + total);
+                    if (total != null) {
+                        monthTotalSpent = FormatUtils.formatMpesaAmount(total);
+                        System.out.println("MonthTotalSPent " + monthTotalSpent);
+                        firebaseCallback.onCallback(monthTotalSpent);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     /**
      * How to return DataSnapshot value as a result of a method
      * https://stackoverflow.com/questions/47847694/how-to-return-datasnapshot-value-as-a-result-of-a-method
@@ -145,28 +165,14 @@ public class TransactionsUtil {
     }
 
     public static BigDecimal getReceivedTransactionsByMonth(final String month) {
-        monthTotalReceived = new BigDecimal(0.00);
-        getUserTransactionsReference().child("transactionSummaries").child("allmonthsReceived").addListenerForSingleValueEvent(new ValueEventListener() {
+        final BigDecimal[] output = new BigDecimal[1];
+        readReceivedTransactionByMonth(month, new FirebaseCallback() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(month)) {
-
-                if (dataSnapshot.hasChild(month)){
-                    Object total = dataSnapshot.child(month).getValue();
-                    if (total != null)
-                        monthTotalReceived = FormatUtils.formatMpesaAmount(total);
-                    Log.i(TAG, " month received>>>> " + monthTotalReceived);
-                }
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            public void onCallback(BigDecimal value) {
+                output[0] = value;
             }
         });
-        return monthTotalReceived;
+        return output[0];
     }
 
     public static void getMonthSpentAmount() {
