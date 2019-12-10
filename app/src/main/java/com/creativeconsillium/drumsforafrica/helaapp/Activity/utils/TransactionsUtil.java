@@ -26,47 +26,54 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 public class TransactionsUtil {
-     static final String TAG = TransactionsUtil.class.getSimpleName();
-     static BigDecimal totalSpent = new BigDecimal(0.00);
-     static BigDecimal totalReceived = new BigDecimal(0.00);
-     static  BigDecimal totalYearSpent = new BigDecimal(0.00);
+    static final String TAG = TransactionsUtil.class.getSimpleName();
+    static BigDecimal totalSpent = new BigDecimal(0.00);
+    static BigDecimal totalReceived = new BigDecimal(0.00);
+    static BigDecimal totalYearSpent = new BigDecimal(0.00);
     static ArrayList<BigDecimal> totalYearReceivedAmounts = new ArrayList<>();
-    static  ArrayList<BigDecimal> totalYearSpentAmounts = new ArrayList<>();
-    static  BigDecimal totalYearReceived = new BigDecimal(0.00);
+    static ArrayList<BigDecimal> totalYearSpentAmounts = new ArrayList<>();
+    static BigDecimal totalYearReceived = new BigDecimal(0.00);
     static String currentYear = FormatUtils.getCurrentYear();
-   static BigDecimal monthTotalReceived = new BigDecimal(0.00);
+    static BigDecimal monthTotalReceived = new BigDecimal(0.00);
     static BigDecimal monthTotalReceivedUpdated = new BigDecimal(0.00);
-   static BigDecimal monthTotalSpent = new BigDecimal(0.00);
+    static BigDecimal monthTotalSpent = new BigDecimal(0.00);
     static BigDecimal monthTotalSpentUpdated = new BigDecimal(0.00);
 
 
-    public static void getTransactionsByDate(String Date){
+    public static void getTransactionsByDate(String Date) {
         //this will be used in the d
     }
-    public static BigDecimal getSpentTransactionsByMonth(final String month){
-//
+
+
+    /**
+     * How to return DataSnapshot value as a result of a method
+     * * https://stackoverflow.com/questions/47847694/how-to-return-datasnapshot-value-as-a-result-of-a-method
+     *
+     * @param month
+     * @param firebaseCallback
+     */
+    public static void readSpentTransactionByMonth(final String month, final FirebaseCallback firebaseCallback) {
+        System.out.println("########## Reading data");
         getUserTransactionsReference().child("transactionSummaries").child("allmonthsSpent").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.i(TAG, "I was hit " + month);
-                if (dataSnapshot.hasChild(month)){
+                Log.i(TAG, "The month is " + month);
+                Log.i(TAG, "dataSnapshot.hasChild  " + dataSnapshot.hasChild(month));
+                if (dataSnapshot.hasChild(month)) {
                     Log.i(TAG, "Month is " + month);
                     Object total = dataSnapshot.child(month).getValue();
-                    if (total!=null){
+                    System.out.println("Read data total " + total);
+                    if (total != null) {
                         monthTotalSpent = FormatUtils.formatMpesaAmount(total);
-                        monthTotalSpentUpdated = monthTotalSpent;
-                        Log.i(TAG, " month spent " + monthTotalSpent);
+                        System.out.println("MonthTotalSPent " + monthTotalSpent);
+                        firebaseCallback.onCallback(monthTotalSpent);
                     }
                 }
-
-                monthTotalSpent = new BigDecimal(0.00);
 
             }
 
@@ -75,17 +82,34 @@ public class TransactionsUtil {
 
             }
         });
-        return monthTotalSpentUpdated;
     }
 
-    public static  BigDecimal getReceivedTransactionsByMonth(final String month){
+    /**
+     * How to return DataSnapshot value as a result of a method
+     * https://stackoverflow.com/questions/47847694/how-to-return-datasnapshot-value-as-a-result-of-a-method
+     *
+     * @param month
+     * @return
+     */
+    public static BigDecimal getSpentTransactionsByMonth(final String month) {
+        final BigDecimal[] output = new BigDecimal[1];
+        readSpentTransactionByMonth(month, new FirebaseCallback() {
+            @Override
+            public void onCallback(BigDecimal value) {
+                output[0] = value;
+            }
+        });
+        return output[0];
+    }
+
+    public static BigDecimal getReceivedTransactionsByMonth(final String month) {
         monthTotalReceived = new BigDecimal(0.00);
         getUserTransactionsReference().child("transactionSummaries").child("allmonthsReceived").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(month)){
+                if (dataSnapshot.hasChild(month)) {
                     Object total = dataSnapshot.child(month).getValue();
-                    if (total!=null)
+                    if (total != null)
                         monthTotalReceived = FormatUtils.formatMpesaAmount(total);
                     Log.i(TAG, " month received>>>> " + monthTotalReceived);
                 }
@@ -98,36 +122,37 @@ public class TransactionsUtil {
 
             }
         });
-      return monthTotalReceived;
+        return monthTotalReceived;
     }
-    public static void getMonthSpentAmount(){
-       final String[] monthsArray = {
-          "JAN",
-          "FEB",
-          "MAR",
-          "APR",
-          "MAY",
-          "JUN",
-          "JULY",
-          "AUG",
-          "SEP",
-          "OCT",
-          "NOV",
-          "DEC"
+
+    public static void getMonthSpentAmount() {
+        final String[] monthsArray = {
+                "JAN",
+                "FEB",
+                "MAR",
+                "APR",
+                "MAY",
+                "JUN",
+                "JULY",
+                "AUG",
+                "SEP",
+                "OCT",
+                "NOV",
+                "DEC"
         };
         final Multimap<String, BigDecimal> foundSpentTransactions = ArrayListMultimap.create();
         getUserTransactionsReference().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()){
-                    for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                if (dataSnapshot.hasChildren()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         Object date = snapshot.child("date").getValue();
                         Object amount = snapshot.child("amount").getValue();
                         Object transactionType = snapshot.child("transactionType").getValue();
                         LocalDate formattedDate = FormatUtils.formatDate(date);
                         String transactionYear = FormatUtils.getYearFromDate(formattedDate);
                         String TransactionMonth = FormatUtils.getMonthFromDate(formattedDate);
-                        if (transactionYear.equals(currentYear)){
+                        if (transactionYear.equals(currentYear)) {
                             for (String month : monthsArray) {
                                 Log.i(TAG, "month in loop " + month + "TransactionMonth " + FormatUtils.getMonthFromDate(formattedDate));
                                 if (TransactionMonth.toLowerCase().equals(month.toLowerCase())) {
@@ -136,7 +161,7 @@ public class TransactionsUtil {
                                         if (transactionType.equals("out")) {
                                             Log.i(TAG, "I was hit again");
                                             if (amount != null)
-                                            foundSpentTransactions.put(month, FormatUtils.formatMpesaAmount(amount));
+                                                foundSpentTransactions.put(month, FormatUtils.formatMpesaAmount(amount));
                                         }
                                     }
                                 }
@@ -148,10 +173,10 @@ public class TransactionsUtil {
                     }
                 }
                 final HashMap<String, String> cleanSpentTransactions = new HashMap<>();
-                for (String month: foundSpentTransactions.keySet()) {
+                for (String month : foundSpentTransactions.keySet()) {
                     BigDecimal spentAmount = new BigDecimal(0.00);
                     Collection<BigDecimal> amounts = foundSpentTransactions.get(month);
-                    for (BigDecimal amount: amounts){
+                    for (BigDecimal amount : amounts) {
                         spentAmount = spentAmount.add(amount);
                     }
                     cleanSpentTransactions.put(month, spentAmount.toString());
@@ -166,7 +191,8 @@ public class TransactionsUtil {
             }
         });
     }
-    public static void getMonthReceivedAmount(){
+
+    public static void getMonthReceivedAmount() {
         final String[] monthsArray = {
                 "JAN",
                 "FEB",
@@ -186,8 +212,8 @@ public class TransactionsUtil {
         getUserTransactionsReference().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()){
-                    for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                if (dataSnapshot.hasChildren()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         Object date = snapshot.child("date").getValue();
                         Object amount = snapshot.child("amount").getValue();
                         Object transactionType = snapshot.child("transactionType").getValue();
@@ -195,16 +221,16 @@ public class TransactionsUtil {
                         String transactionYear = FormatUtils.getYearFromDate(formattedDate);
                         String TransactionMonth = FormatUtils.getMonthFromDate(formattedDate);
                         Log.i(TAG, "I was hit");
-                        if (transactionYear.equals(currentYear)){
+                        if (transactionYear.equals(currentYear)) {
                             for (String month : monthsArray) {
                                 Log.i(TAG, "month in loop " + month + "TransactionMonth " + FormatUtils.getMonthFromDate(formattedDate));
-                            if (TransactionMonth.toLowerCase().equals(month.toLowerCase())) {
-                                Log.i(TAG, "The current year is " + currentYear + "transaction Year " + transactionYear);
-                                if (transactionType != null) {
-                                    if (transactionType.equals("in")) {
+                                if (TransactionMonth.toLowerCase().equals(month.toLowerCase())) {
+                                    Log.i(TAG, "The current year is " + currentYear + "transaction Year " + transactionYear);
+                                    if (transactionType != null) {
+                                        if (transactionType.equals("in")) {
                                             Log.i(TAG, "I was hit again");
                                             if (amount != null)
-                                        foundTransactions.put(month, FormatUtils.formatMpesaAmount(amount));
+                                                foundTransactions.put(month, FormatUtils.formatMpesaAmount(amount));
                                         }
                                     }
                                 }
@@ -214,13 +240,13 @@ public class TransactionsUtil {
                     }
                 }
                 final HashMap<String, String> cleanTransactions = new HashMap<>();
-                for (String month: foundTransactions.keySet()) {
+                for (String month : foundTransactions.keySet()) {
                     BigDecimal receivedAmount = new BigDecimal(0.00);
                     Collection<BigDecimal> amounts = foundTransactions.get(month);
-                      for (BigDecimal amount: amounts){
-                           receivedAmount = receivedAmount.add(amount);
-                      }
-                      cleanTransactions.put(month, receivedAmount.toString());
+                    for (BigDecimal amount : amounts) {
+                        receivedAmount = receivedAmount.add(amount);
+                    }
+                    cleanTransactions.put(month, receivedAmount.toString());
                     Log.i(TAG, "received amount is>>>>> " + receivedAmount + " for " + month + currentYear);
                 }
                 setMonthlyReceivedSummaries(cleanTransactions);
@@ -234,17 +260,17 @@ public class TransactionsUtil {
         });
     }
 
-    public static void getTransactionSummary(@NonNull final View fragmentLayout){
+    public static void getTransactionSummary(@NonNull final View fragmentLayout) {
         getUserTransactionsReference().child("transactionSummaries").addValueEventListener(new ValueEventListener() {
             @Override
-           public void onDataChange(@NonNull DataSnapshot dataSnapshot){
-                if (dataSnapshot.hasChildren()){
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChildren()) {
                     Object monthSpent = dataSnapshot.child("monthSpent").getValue();
                     Object monthReceived = dataSnapshot.child("monthReceived").getValue();
                     Object totalSpent = dataSnapshot.child("totalSpent").getValue();
                     Object totalReceived = dataSnapshot.child("totalReceived").getValue();
                     Log.i(TAG, "SUMMARIES " + "monthSpent " + monthSpent + "month received " + monthReceived
-                    + "totalReceived " + totalReceived + "totalSpent " + totalSpent
+                            + "totalReceived " + totalReceived + "totalSpent " + totalSpent
                     );
                     TextView monthTotalReceivedView = (TextView) fragmentLayout.findViewById(R.id.monthTotalReceived);
                     TextView monthTotalSpentView = (TextView) fragmentLayout.findViewById(R.id.spentMonthAmount);
@@ -272,14 +298,14 @@ public class TransactionsUtil {
         });
     }
 
-    public static void getTotalForCurrentMonthAndYear(@NonNull final View fragmentLayout){
+    public static void getTotalForCurrentMonthAndYear(@NonNull final View fragmentLayout) {
 
         getUserTransactionsReference().
                 addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.hasChildren()){
-                            for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                        if (dataSnapshot.hasChildren()) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 Object date = snapshot.child("date").getValue();
                                 Object amount = snapshot.child("amount").getValue();
                                 Object transactionType = snapshot.child("transactionType").getValue();
@@ -287,45 +313,44 @@ public class TransactionsUtil {
                                 String transactionYear = FormatUtils.getYearFromDate(formattedDate);
                                 String month = FormatUtils.getMonthFromDate(formattedDate);
                                 String current = FormatUtils.getCurrentMonth();
-                                if (transactionYear!=null){
-                                    if (transactionYear.equals(currentYear)){
+                                if (transactionYear != null) {
+                                    if (transactionYear.equals(currentYear)) {
                                         Log.i(TAG, "Current Values " + "month spent:: " + totalSpent + " month received " + totalReceived);
                                         // Log.i(TAG, "The type is " + transactionTYpe );
                                         if (month.equals(current))
-                                            if (amount!=null)
-                                                if (transactionType!=null)
-                                                    if (transactionType.equals("out")){
+                                            if (amount != null)
+                                                if (transactionType != null)
+                                                    if (transactionType.equals("out")) {
 //                                        spentAmounts.add(FormatUtils.formatMpesaAmount(amount));
                                                         totalSpent = totalSpent.add(FormatUtils.formatMpesaAmount(amount));
 
                                                         Log.i(TAG, "totalSpent " + totalSpent + " date:: " + date);
 
-                                                    }else if (transactionType.equals("in")){
+                                                    } else if (transactionType.equals("in")) {
 //                                            receivedAmonts.add(FormatUtils.formatMpesaAmount(amount));
                                                         totalReceived = totalReceived.add(FormatUtils.formatMpesaAmount(amount));
                                                         Log.i(TAG, "total Received " + totalReceived + " date:: " + date);
 
                                                     }
                                     }
-                                    if (currentYear.equals(transactionYear)){
-                                            Log.i(TAG, "Current Values " + "year spent:: " + totalYearSpent + " year received " + totalYearReceived  );
-                                        if (transactionType!=null)
-                                            if (transactionType.equals("out")){
-                                                if (amount!=null)
+                                    if (currentYear.equals(transactionYear)) {
+                                        Log.i(TAG, "Current Values " + "year spent:: " + totalYearSpent + " year received " + totalYearReceived);
+                                        if (transactionType != null)
+                                            if (transactionType.equals("out")) {
+                                                if (amount != null)
 //                                                totalYearSpentAmounts.add(FormatUtils.formatMpesaAmount(amount));
-                                                totalYearSpent = totalYearSpent.add(FormatUtils.formatMpesaAmount(amount));
+                                                    totalYearSpent = totalYearSpent.add(FormatUtils.formatMpesaAmount(amount));
                                                 Log.i(TAG, "totalYearSpent " + totalYearSpent + " year:: " + date);
 
-                                            }else if (transactionType.equals("in")){
-                                                if (amount!=null)
+                                            } else if (transactionType.equals("in")) {
+                                                if (amount != null)
 //                                                totalYearReceivedAmounts.add(FormatUtils.formatMpesaAmount(amount));
-                                                totalYearReceived = totalYearReceived.add(FormatUtils.formatMpesaAmount(amount));
+                                                    totalYearReceived = totalYearReceived.add(FormatUtils.formatMpesaAmount(amount));
                                                 Log.i(TAG, "totalYearReceived " + totalYearReceived + " date:: " + date);
 
                                             }
                                     }
                                 }
-
 
 
                             }
@@ -353,60 +378,68 @@ public class TransactionsUtil {
 
     }
 
-    public static void updateSummaries(TransactionTotal transactionTotal){
+    public static void updateSummaries(TransactionTotal transactionTotal) {
         final Map<String, Object> transactionsSummaries = transactionTotal.toMap();
         DatabaseReference summariesRef = getUserTransactionsReference();
         summariesRef.child("transactionSummaries").setValue(transactionsSummaries)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             Log.i(TAG, "Transactions summaries Updated!! " + transactionsSummaries);
-                        }else {
+                        } else {
                             Log.i(TAG, "Update failed " + task.getException().getMessage());
                         }
                     }
                 });
     }
-    public static void setMonthlyReceivedSummaries(final HashMap<String, String> allMonthsReceived){
+
+    public static void setMonthlyReceivedSummaries(final HashMap<String, String> allMonthsReceived) {
         DatabaseReference summariesRef = getUserTransactionsReference();
         summariesRef.child("transactionSummaries").child("allmonthsReceived").setValue(allMonthsReceived)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             Log.i(TAG, "All Month summaries Updated!! " + allMonthsReceived);
-                        }else {
+                        } else {
                             Log.i(TAG, "Update failed " + task.getException().getMessage());
                         }
                     }
                 });
     }
-    public static void setMonthlySpentSummaries(final HashMap<String, String> allMonthsSpent){
+
+    public static void setMonthlySpentSummaries(final HashMap<String, String> allMonthsSpent) {
         DatabaseReference summariesRef = getUserTransactionsReference();
         summariesRef.child("transactionSummaries").child("allmonthsSpent").setValue(allMonthsSpent)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             Log.i(TAG, "All Month summaries Updated!! " + allMonthsSpent);
-                        }else {
+                        } else {
                             Log.i(TAG, "Update failed " + task.getException().getMessage());
                         }
                     }
                 });
     }
-   public static void addReceivedTransaction(String date, String amount, String name, String transactionType){
-       MpesaMessage transaction = new MpesaMessage();
-       transaction.setDate(date);
-       transaction.setAmount(amount);
-       transaction.setName(name);
-       transaction.setTransactionTyp(transactionType);
-       SmsUtils.uploadMessageToFirebase(transaction);
-   }
-    public static  DatabaseReference getUserTransactionsReference(){
-        String userId = FirebaseUtils.getCurrentUser().getUid();
-        return  FirebaseUtils.createOrGetDatabaseRef("transactions").child(userId);
+
+    public static void addReceivedTransaction(String date, String amount, String name, String transactionType) {
+        MpesaMessage transaction = new MpesaMessage();
+        transaction.setDate(date);
+        transaction.setAmount(amount);
+        transaction.setName(name);
+        transaction.setTransactionTyp(transactionType);
+        SmsUtils.uploadMessageToFirebase(transaction);
     }
 
+    public static DatabaseReference getUserTransactionsReference() {
+        String userId = FirebaseUtils.getCurrentUser().getUid();
+        return FirebaseUtils.createOrGetDatabaseRef("transactions").child(userId);
+    }
+
+}
+
+interface FirebaseCallback {
+    void onCallback(BigDecimal value);
 }
