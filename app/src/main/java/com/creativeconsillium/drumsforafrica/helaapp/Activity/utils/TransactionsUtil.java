@@ -90,53 +90,37 @@ public class TransactionsUtil {
      * How to return DataSnapshot value as a result of a method
      * * https://stackoverflow.com/questions/47847694/how-to-return-datasnapshot-value-as-a-result-of-a-method
      *
-     * @param month
-     * @param firebaseCallback
+     * @param
+     * @param
      */
-    public static void readSpentTransactionByMonth(final String month, final FirebaseCallback firebaseCallback) {
-        System.out.println("########## Reading data");
-        getUserTransactionsReference().child("transactionSummaries").child("allmonthsSpent").addListenerForSingleValueEvent(new ValueEventListener() {
+    public static void readTransactionByMonth(final OnGetDataListener listener) {
+        listener.onStart();
+        getUserTransactionsReference().child("transactionSummaries").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.i(TAG, "The month is " + month);
-                Log.i(TAG, "dataSnapshot.hasChild  " + dataSnapshot.hasChild(month));
-                if (dataSnapshot.hasChild(month)) {
-                    Log.i(TAG, "Month is " + month);
-                    Object total = dataSnapshot.child(month).getValue();
-                    System.out.println("Read data total " + total);
-                    if (total != null) {
-                        monthTotalSpent = FormatUtils.formatMpesaAmount(total);
-                        System.out.println("MonthTotalSPent " + monthTotalSpent);
-                        firebaseCallback.onCallback(monthTotalSpent);
-                    }
-                }
-
+                listener.onSuccess(dataSnapshot);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                listener.onFailure();
             }
         });
     }
 
-    public static void readReceivedTransactionByMonth(final String month, final FirebaseCallback firebaseCallback) {
-        System.out.println("########## Reading data");
+
+    public static BigDecimal getReceivedTransactionsByMonth(final String month) {
+        monthTotalReceived = new BigDecimal(0.00);
         getUserTransactionsReference().child("transactionSummaries").child("allmonthsReceived").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.i(TAG, "The month is " + month);
-                Log.i(TAG, "dataSnapshot.hasChild  " + dataSnapshot.hasChild(month));
                 if (dataSnapshot.hasChild(month)) {
-                    Log.i(TAG, "Month is " + month);
                     Object total = dataSnapshot.child(month).getValue();
-                    System.out.println("Read data total " + total);
-                    if (total != null) {
-                        monthTotalSpent = FormatUtils.formatMpesaAmount(total);
-                        System.out.println("MonthTotalSPent " + monthTotalSpent);
-                        firebaseCallback.onCallback(monthTotalSpent);
-                    }
+                    if (total != null)
+                        monthTotalReceived = FormatUtils.formatMpesaAmount(total);
+                    Log.i(TAG, " month received>>>> " + monthTotalReceived);
                 }
+
 
             }
 
@@ -145,35 +129,7 @@ public class TransactionsUtil {
 
             }
         });
-    }
-
-    /**
-     * How to return DataSnapshot value as a result of a method
-     * https://stackoverflow.com/questions/47847694/how-to-return-datasnapshot-value-as-a-result-of-a-method
-     *
-     * @param month
-     * @return
-     */
-    public static BigDecimal getSpentTransactionsByMonth(final String month) {
-        final BigDecimal[] output = new BigDecimal[1];
-        readSpentTransactionByMonth(month, new FirebaseCallback() {
-            @Override
-            public void onCallback(BigDecimal value) {
-                output[0] = value;
-            }
-        });
-        return output[0];
-    }
-
-    public static BigDecimal getReceivedTransactionsByMonth(final String month) {
-        final BigDecimal[] output = new BigDecimal[1];
-        readReceivedTransactionByMonth(month, new FirebaseCallback() {
-            @Override
-            public void onCallback(BigDecimal value) {
-                output[0] = value;
-            }
-        });
-        return output[0];
+        return monthTotalReceived;
     }
 
     public static void getMonthSpentAmount() {
@@ -487,6 +443,3 @@ public class TransactionsUtil {
 
 }
 
-interface FirebaseCallback {
-    void onCallback(BigDecimal value);
-}

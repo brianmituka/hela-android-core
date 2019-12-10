@@ -20,14 +20,17 @@ import com.creativeconsillium.drumsforafrica.helaapp.Activity.Adapter.AdapterRVH
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.ModelHomeSummary;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.ModelHomeSummaryBody;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.FormatUtils;
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.OnGetDataListener;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.TransactionsUtil;
 import com.creativeconsillium.drumsforafrica.helaapp.R;
+import com.google.firebase.database.DataSnapshot;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 /**
  * Fragment class for Home Summary.
- *
+ * <p>
  * Created by Edward N. Ndukui,
  * on Thursday, 31st/October/2019,
  * at 6:16PM.
@@ -53,107 +56,130 @@ public class FragHomeSummary extends Fragment {
 
     /**
      * Method to declare and intialize class variables and UI Objects referenced in this Fragment.
-     *
+     * <p>
      * Called In:
-     *          - (Override) this.onCreate();
+     * - (Override) this.onCreate();
      *
-     * @param fragmentLayout                                    (View)
+     * @param fragmentLayout (View)
      */
-    private void initializeVariablesAndUIObjects(@NonNull View fragmentLayout) {
+    private void initializeVariablesAndUIObjects(@NonNull final View fragmentLayout) {
 
         ImageView imgvBack = (ImageView) fragmentLayout.findViewById(R.id.imgvSettingsProfileBackArrow);
         imgvBack.setOnClickListener(clkHomeSummary);
 
-        AdapterRVHomeSummary clsAdapterHomeSummary = new AdapterRVHomeSummary(getContext(), codeToPrepareHomeSummaryDummyData());
+        TransactionsUtil.readTransactionByMonth(new OnGetDataListener() {
+            @Override
+            public void onSuccess(DataSnapshot dataSnapshot) {
+                AdapterRVHomeSummary clsAdapterHomeSummary = new AdapterRVHomeSummary(getContext(), codeToPrepareHomeSummaryDummyData(dataSnapshot));
 
-        AppCompatActivity acactParentActivity = (AppCompatActivity) getActivity();
-        if (acactParentActivity != null) {
+                AppCompatActivity acactParentActivity = (AppCompatActivity) getActivity();
+                if (acactParentActivity != null) {
 
-            ActionBar abActivityActionBar = acactParentActivity.getSupportActionBar();
-            if (abActivityActionBar != null) {
-                abActivityActionBar.setTitle(getString(R.string.titleSummary));
-                abActivityActionBar.setDisplayHomeAsUpEnabled(false);
+                    ActionBar abActivityActionBar = acactParentActivity.getSupportActionBar();
+                    if (abActivityActionBar != null) {
+                        abActivityActionBar.setTitle(getString(R.string.titleSummary));
+                        abActivityActionBar.setDisplayHomeAsUpEnabled(false);
+                    }
+
+                }
+
+                RecyclerView rvHomeSummary = (RecyclerView) fragmentLayout.findViewById(R.id.rvHomeSummary);
+                RecyclerView.LayoutManager rvlmLayoutManager = new LinearLayoutManager(getContext());
+                rvHomeSummary.setLayoutManager(rvlmLayoutManager);
+                rvHomeSummary.setHasFixedSize(true);
+                rvHomeSummary.setAdapter(clsAdapterHomeSummary);
+
             }
 
+            @Override
+            public void onStart() {
+//                TODO Add progress diglot here
+            }
+
+            @Override
+            public void onFailure() {
+//              TODO Remove progress dialog here
+            }
+        });
+
+
+    }
+
+    private void setSummaryBodyFields(String month, ModelHomeSummaryBody summaryBody, DataSnapshot spentSnapshot, DataSnapshot receivedSnapshot) {
+        summaryBody.setsMonthName(month);
+        if (receivedSnapshot.hasChild(month)) {
+            Object receivedTotal = receivedSnapshot.child(month).getValue();
+            if (receivedTotal != null) {
+                summaryBody.setdAmountReceived(FormatUtils.formatMpesaAmount(receivedTotal));
+            } else {
+                summaryBody.setdAmountReceived(new BigDecimal(0.00));
+            }
+        }else {
+            summaryBody.setdAmountReceived(new BigDecimal(0.00));
         }
 
-        RecyclerView rvHomeSummary = (RecyclerView) fragmentLayout.findViewById(R.id.rvHomeSummary);
-        RecyclerView.LayoutManager rvlmLayoutManager = new LinearLayoutManager(getContext());
-        rvHomeSummary.setLayoutManager(rvlmLayoutManager);
-        rvHomeSummary.setHasFixedSize(true);
-        rvHomeSummary.setAdapter(clsAdapterHomeSummary);
+        if (spentSnapshot.hasChild(month)) {
+            Object spentTotal = spentSnapshot.child(month).getValue();
+            if (spentTotal != null) {
+                summaryBody.setdAmountSpent(FormatUtils.formatMpesaAmount(spentTotal));
+            } else {
+                summaryBody.setdAmountSpent(new BigDecimal(0.00));
+            }
+        }else {
+            summaryBody.setdAmountSpent(new BigDecimal(0.00));
+        }
 
     }
 
     /**
      * Method to prepare dummy data for the purpose of testing.
-     *
+     * <p>
      * Called In:
-     *          - this.initializeVariablesAndUIObjects();
+     * - this.initializeVariablesAndUIObjects();
      *
      * @return arylHomeSummary                                          (ArrayList<ModelHomeSummary>)
      */
-    private ArrayList<ModelHomeSummary> codeToPrepareHomeSummaryDummyData() {
+    private ArrayList<ModelHomeSummary> codeToPrepareHomeSummaryDummyData(DataSnapshot dataSnapshot) {
+
+        DataSnapshot spentSnapshot = dataSnapshot.child("allmonthsSpent");
+        DataSnapshot receivedSnapshot = dataSnapshot.child("allmonthsReceived");
 
         ModelHomeSummaryBody clsModelHomeSumarryBody0 = new ModelHomeSummaryBody();
-        clsModelHomeSumarryBody0.setsMonthName("JAN");
-        clsModelHomeSumarryBody0.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("JAN"));
-        clsModelHomeSumarryBody0.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("JAN"));
+        setSummaryBodyFields("JAN", clsModelHomeSumarryBody0, spentSnapshot, receivedSnapshot);
 
         ModelHomeSummaryBody clsModelHomeSumarryBody1 = new ModelHomeSummaryBody();
-        clsModelHomeSumarryBody1.setsMonthName("FEB");
-        clsModelHomeSumarryBody1.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("FEB"));
-        clsModelHomeSumarryBody1.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("FEB"));
+        setSummaryBodyFields("FEB", clsModelHomeSumarryBody1, spentSnapshot, receivedSnapshot);
 
         ModelHomeSummaryBody clsModelHomeSumarryBody2 = new ModelHomeSummaryBody();
-        clsModelHomeSumarryBody2.setsMonthName("MAR");
-        clsModelHomeSumarryBody2.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("MAR"));
-        clsModelHomeSumarryBody2.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("MAR"));
+        setSummaryBodyFields("MAR", clsModelHomeSumarryBody2, spentSnapshot, receivedSnapshot);
 
         ModelHomeSummaryBody clsModelHomeSumarryBody3 = new ModelHomeSummaryBody();
-        clsModelHomeSumarryBody3.setsMonthName("APR");
-        clsModelHomeSumarryBody3.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("APR"));
-        clsModelHomeSumarryBody3.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("APR"));
+        setSummaryBodyFields("APR", clsModelHomeSumarryBody3, spentSnapshot, receivedSnapshot);
 
         ModelHomeSummaryBody clsModelHomeSumarryBody4 = new ModelHomeSummaryBody();
-        clsModelHomeSumarryBody4.setsMonthName("MAY");
-        clsModelHomeSumarryBody4.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("MAY"));
-        clsModelHomeSumarryBody4.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("MAY"));
+        setSummaryBodyFields("MAY", clsModelHomeSumarryBody4, spentSnapshot, receivedSnapshot);
 
         ModelHomeSummaryBody clsModelHomeSumarryBody5 = new ModelHomeSummaryBody();
-        clsModelHomeSumarryBody5.setsMonthName("JUN");
-        clsModelHomeSumarryBody5.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("JUN"));
-        clsModelHomeSumarryBody5.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("JUN"));
+        setSummaryBodyFields("JUN", clsModelHomeSumarryBody5, spentSnapshot, receivedSnapshot);
 
         ModelHomeSummaryBody clsModelHomeSumarryBody6 = new ModelHomeSummaryBody();
-        clsModelHomeSumarryBody6.setsMonthName("JUL");
-        clsModelHomeSumarryBody6.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("JUL"));
-        clsModelHomeSumarryBody6.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("JUL"));
+        setSummaryBodyFields("JUL", clsModelHomeSumarryBody6, spentSnapshot, receivedSnapshot);
 
         ModelHomeSummaryBody clsModelHomeSumarryBody7 = new ModelHomeSummaryBody();
-        clsModelHomeSumarryBody7.setsMonthName("AUG");
-        clsModelHomeSumarryBody7.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("AUG"));
-        clsModelHomeSumarryBody7.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("AUG"));
+        setSummaryBodyFields("AUG", clsModelHomeSumarryBody7, spentSnapshot, receivedSnapshot);
 
         ModelHomeSummaryBody clsModelHomeSumarryBody8 = new ModelHomeSummaryBody();
-        clsModelHomeSumarryBody8.setsMonthName("SEP");
-        clsModelHomeSumarryBody8.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("SEP"));
-        clsModelHomeSumarryBody8.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("SEP"));
+        setSummaryBodyFields("SEP", clsModelHomeSumarryBody8, spentSnapshot, receivedSnapshot);
 
         ModelHomeSummaryBody clsModelHomeSumarryBody9 = new ModelHomeSummaryBody();
-        clsModelHomeSumarryBody9.setsMonthName("OCT");
-        clsModelHomeSumarryBody9.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("OCT"));
-        clsModelHomeSumarryBody9.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("OCT"));
+        setSummaryBodyFields("OCT", clsModelHomeSumarryBody9, spentSnapshot, receivedSnapshot);
 
         ModelHomeSummaryBody clsModelHomeSumarryBody10 = new ModelHomeSummaryBody();
-        clsModelHomeSumarryBody10.setsMonthName("NOV");
-        clsModelHomeSumarryBody10.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("NOV"));
-        clsModelHomeSumarryBody10.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("NOV"));
+        setSummaryBodyFields("NOV", clsModelHomeSumarryBody10, spentSnapshot, receivedSnapshot);
 
         ModelHomeSummaryBody clsModelHomeSumarryBody11 = new ModelHomeSummaryBody();
-        clsModelHomeSumarryBody11.setsMonthName("DEC");
-        clsModelHomeSumarryBody11.setdAmountReceived(TransactionsUtil.getReceivedTransactionsByMonth("DEC"));
-        clsModelHomeSumarryBody11.setdAmountSpent(TransactionsUtil.getSpentTransactionsByMonth("DEC"));
+        setSummaryBodyFields("DEC", clsModelHomeSumarryBody11, spentSnapshot, receivedSnapshot);
+
 
         ArrayList<ModelHomeSummaryBody> arylSummaryBodies2019 = new ArrayList<>();
         arylSummaryBodies2019.add(clsModelHomeSumarryBody0);
@@ -207,9 +233,9 @@ public class FragHomeSummary extends Fragment {
 
     /**
      * Method to handle back/up navigation from this Fragment.
-     *
+     * <p>
      * Called In:
-     *          - (Override) this.clkSettingsProfile.onClick();
+     * - (Override) this.clkSettingsProfile.onClick();
      */
     private void codeToNavigateBack() {
 
@@ -220,9 +246,9 @@ public class FragHomeSummary extends Fragment {
 
     /**
      * View.OnClickListener interface for handling clicks on views on this Fragment.
-     *
+     * <p>
      * Implemented In:
-     *          - this.initializeVariablesAndUIObjects();
+     * - this.initializeVariablesAndUIObjects();
      */
     private View.OnClickListener clkHomeSummary = new View.OnClickListener() {
 
