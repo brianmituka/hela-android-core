@@ -24,6 +24,7 @@ import com.creativeconsillium.drumsforafrica.helaapp.Activity.Adapter.AdapterRVT
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Adapter.AdapterRVTransactionsReceived;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.ModelTransactionsDate;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.ModelTransactionsReceived;
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.utils.TransactionsUtil;
 import com.creativeconsillium.drumsforafrica.helaapp.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.whiteelephant.monthpicker.MonthPickerDialog;
@@ -93,7 +94,9 @@ public class FragmentTransactionsReceived extends Fragment {
         Calendar calMonthSelected = new GregorianCalendar(Locale.getDefault());
         int iCurrentMonth = calMonthSelected.get(Calendar.MONTH);
         int iCurrentYear = calMonthSelected.get(Calendar.YEAR);
+//        String currentMonth = iCurrentMonth
         AdapterRVTransactionsDate clsAdapterTransactionsDate = new AdapterRVTransactionsDate(coxContext, codeToGetDatesInSelectedMonthYear(iCurrentMonth, iCurrentYear));
+        TransactionsUtil.getTransactionsReceivedByMonth(String.valueOf(iCurrentMonth), String.valueOf(iCurrentYear));
 
         rvTransactionsDate = (RecyclerView) fragmentLayout.findViewById(R.id.recyclerViewDate);
         RecyclerView.LayoutManager rvlmLayoutManagerDates = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -277,7 +280,9 @@ public class FragmentTransactionsReceived extends Fragment {
         mpdgbldMonthPickerDialog.setMaxYear(calToday.get(Calendar.YEAR));
         mpdgbldMonthPickerDialog.setTitle("Select Transaction Month/Year");
 
+
         MonthPickerDialog mpdgMonthPicker = mpdgbldMonthPickerDialog.build();
+
         mpdgMonthPicker.show();
 
     }
@@ -333,7 +338,8 @@ public class FragmentTransactionsReceived extends Fragment {
      * Implemented In:
      *          - this.codeToSetUpMonthYearPicker();
      */
-    private MonthPickerDialog.OnDateSetListener odslMonthYearPicker = new MonthPickerDialog.OnDateSetListener() {
+    private MonthPickerDialog.OnDateSetListener
+            odslMonthYearPicker = new MonthPickerDialog.OnDateSetListener() {
 
         @Override
         public void onDateSet(int selectedMonth, int selectedYear) {

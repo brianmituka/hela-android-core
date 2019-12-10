@@ -182,7 +182,7 @@ public class FirebaseUtils {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                 UiUtils.hideDialog();
-                   ;
+
                     Toast.makeText(activity, "Login successful ",
                             Toast.LENGTH_SHORT).show();
                     Log.i(TAG, "Login successful");

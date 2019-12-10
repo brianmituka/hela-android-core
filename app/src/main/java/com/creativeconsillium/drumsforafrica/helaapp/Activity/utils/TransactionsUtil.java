@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class TransactionsUtil {
     static final String TAG = TransactionsUtil.class.getSimpleName();
@@ -48,7 +49,7 @@ public class TransactionsUtil {
     public static List<MpesaMessage> userSpentTransactionsUpdated = new ArrayList<>();
 
 
-    public static void getTransactionsReceivedByMonth(final String month, final String year){
+    public static void getTransactionsReceivedByMonthAndYear(final String month, final String year){
         getUserTransactionsReference().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -428,62 +429,58 @@ public class TransactionsUtil {
 
     }
 
-    public static void updateSummaries(TransactionTotal transactionTotal) {
+    public static void updateSummaries(TransactionTotal transactionTotal){
         final Map<String, Object> transactionsSummaries = transactionTotal.toMap();
         DatabaseReference summariesRef = getUserTransactionsReference();
         summariesRef.child("transactionSummaries").setValue(transactionsSummaries)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful()){
                             Log.i(TAG, "Transactions summaries Updated!! " + transactionsSummaries);
-                        } else {
+                        }else {
                             Log.i(TAG, "Update failed " + task.getException().getMessage());
                         }
                     }
                 });
     }
-
-    public static void setMonthlyReceivedSummaries(final HashMap<String, String> allMonthsReceived) {
+    public static void setMonthlyReceivedSummaries(final HashMap<String, String> allMonthsReceived){
         DatabaseReference summariesRef = getUserTransactionsReference();
         summariesRef.child("transactionSummaries").child("allmonthsReceived").setValue(allMonthsReceived)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful()){
                             Log.i(TAG, "All Month summaries Updated!! " + allMonthsReceived);
-                        } else {
+                        }else {
                             Log.i(TAG, "Update failed " + task.getException().getMessage());
                         }
                     }
                 });
     }
-
-    public static void setMonthlySpentSummaries(final HashMap<String, String> allMonthsSpent) {
+    public static void setMonthlySpentSummaries(final HashMap<String, String> allMonthsSpent){
         DatabaseReference summariesRef = getUserTransactionsReference();
         summariesRef.child("transactionSummaries").child("allmonthsSpent").setValue(allMonthsSpent)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful()){
                             Log.i(TAG, "All Month summaries Updated!! " + allMonthsSpent);
-                        } else {
+                        }else {
                             Log.i(TAG, "Update failed " + task.getException().getMessage());
                         }
                     }
                 });
     }
-
-    public static void addReceivedTransaction(String date, String amount, String name, String transactionType) {
-        MpesaMessage transaction = new MpesaMessage();
-        transaction.setDate(date);
-        transaction.setAmount(amount);
-        transaction.setName(name);
-        transaction.setTransactionTyp(transactionType);
-        SmsUtils.uploadMessageToFirebase(transaction);
-    }
-
-    public static DatabaseReference getUserTransactionsReference() {
+   public static void addReceivedTransaction(String date, String amount, String name, String transactionType){
+       MpesaMessage transaction = new MpesaMessage();
+       transaction.setDate(date);
+       transaction.setAmount(amount);
+       transaction.setName(name);
+       transaction.setTransactionTyp(transactionType);
+       SmsUtils.uploadMessageToFirebase(transaction);
+   }
+    public static  DatabaseReference getUserTransactionsReference(){
         String userId = FirebaseUtils.getCurrentUser().getUid();
         return FirebaseUtils.createOrGetDatabaseRef("transactions").child(userId);
     }
