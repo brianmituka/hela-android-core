@@ -69,7 +69,6 @@ public class HomeActivity extends AppCompatActivity implements InterfaceBudgets 
     @Override
     protected void onResume(){
 
-            Log.i("HOMEMM", " T>>>> " + TransactionsUtil.getSpentTransactionsByMonth("SEP"));
         if (!PreferenceUtils.isMpesaSynced(getApplicationContext())){
             new uploadMessages().execute();
            // new GetMonthlySummaries().execute();
