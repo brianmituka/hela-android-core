@@ -4,6 +4,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.ModelBudgets;
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.ModelTransactionsReceived;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.MonthSummary;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.MpesaMessage;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.TransactionTotal;
@@ -45,10 +47,47 @@ public class TransactionsUtil {
     static BigDecimal monthTotalReceivedUpdated = new BigDecimal(0.00);
    static BigDecimal monthTotalSpent = new BigDecimal(0.00);
     static BigDecimal monthTotalSpentUpdated = new BigDecimal(0.00);
+    public static List<MpesaMessage> userReceivedTransactions = new ArrayList<>();
+    public static List<MpesaMessage> userReceivedTransactionsUpdated = new ArrayList<>();
+    public static List<MpesaMessage> userSpentTransactions = new ArrayList<>();
+    public static List<MpesaMessage> userSpentTransactionsUpdated = new ArrayList<>();
 
 
-    public static void getTransactionsByDate(String Date){
-        //this will be used in the d
+    public static void getTransactionsReceivedByMonth(final String month, final String year){
+        getUserTransactionsReference().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChildren()){
+                    for (DataSnapshot snapshot: dataSnapshot.getChildren()){
+                        Object date = snapshot.child("date").getValue();
+                        Object transactionType = snapshot.child("transactionType").getValue();
+                        LocalDate formattedDate = FormatUtils.formatDate(date);
+                        String transactionYear = FormatUtils.getYearFromDate(formattedDate);
+                        String TransactionMonth = FormatUtils.getMonthFromDate(formattedDate);
+                        Log.i(TAG, "The month and Year are:: " + month + year);
+//                        if (formattedDate == Date){
+//                            if (transactionType == "in"){
+//                                MpesaMessage transaction = snapshot.getValue(MpesaMessage.class);
+//                                userReceivedTransactions.add(transaction);
+//
+//                            }
+//                        }
+
+                    }
+                    userReceivedTransactionsUpdated = userReceivedTransactions;
+                    userReceivedTransactions = new ArrayList<>();
+                }else{
+                    userReceivedTransactions = new ArrayList<>();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
     public static BigDecimal getSpentTransactionsByMonth(final String month){
 //
@@ -83,6 +122,7 @@ public class TransactionsUtil {
         getUserTransactionsReference().child("transactionSummaries").child("allmonthsReceived").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 if (dataSnapshot.hasChild(month)){
                     Object total = dataSnapshot.child(month).getValue();
                     if (total!=null)
