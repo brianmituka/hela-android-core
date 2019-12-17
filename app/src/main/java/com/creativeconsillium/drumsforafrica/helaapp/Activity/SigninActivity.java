@@ -30,7 +30,6 @@ public class SigninActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseUtils.loginIntoApp(SigninActivity.this,email, password);
-                openHome();
             }
         });
 

@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.CreateAccountActivity;
+import com.creativeconsillium.drumsforafrica.helaapp.Activity.HomeActivity;
 import com.creativeconsillium.drumsforafrica.helaapp.Activity.Model.User;
 import com.creativeconsillium.drumsforafrica.helaapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -181,11 +182,14 @@ public class FirebaseUtils {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                UiUtils.hideDialog();
+//                UiUtils.hideDialog();
 
                     Toast.makeText(activity, "Login successful ",
                             Toast.LENGTH_SHORT).show();
                     Log.i(TAG, "Login successful");
+                    Intent i = new Intent(activity, HomeActivity.class);
+                    activity.startActivity(i);
+                    activity.finish();
 
                 }else {
                 //    UiUtils.hideDialog();
