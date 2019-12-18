@@ -98,7 +98,7 @@ public class FragmentBudgets extends Fragment {
         bsbAddBudgetBottomSheet.setState(BottomSheetBehavior.STATE_COLLAPSED);
         bsbAddBudgetBottomSheet.setPeekHeight(0);
         bsbAddBudgetBottomSheet.setHideable(false);
-
+//this is a test to the branch
         initializeVariablesAndUIObjectsInAddBudgetBottomSheet(vAddBudgetBottomSheet);
 
     }
