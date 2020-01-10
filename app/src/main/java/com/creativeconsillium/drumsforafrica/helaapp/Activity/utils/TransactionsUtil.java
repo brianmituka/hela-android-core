@@ -109,30 +109,10 @@ public class TransactionsUtil {
     }
 
 
-    public static BigDecimal getReceivedTransactionsByMonth(final String month) {
-        monthTotalReceived = new BigDecimal(0.00);
-        getUserTransactionsReference().child("transactionSummaries").child("allmonthsReceived").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(month)) {
-                    Object total = dataSnapshot.child(month).getValue();
-                    if (total != null)
-                        monthTotalReceived = FormatUtils.formatMpesaAmount(total);
-                    Log.i(TAG, " month received>>>> " + monthTotalReceived);
-                }
 
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        return monthTotalReceived;
-    }
 
     public static void getMonthSpentAmount() {
+        Log.i(TAG, "getMonthSpentAmount is running");
         final String[] monthsArray = {
                 "JAN",
                 "FEB",
@@ -361,6 +341,7 @@ public class TransactionsUtil {
 
 
                             }
+
                             String monthReceivedString = totalReceived.toString();
                             String monthSpentString = totalSpent.toString();
                             String totalYearSpentString = totalYearSpent.toString();
@@ -388,7 +369,8 @@ public class TransactionsUtil {
     public static void updateSummaries(TransactionTotal transactionTotal){
         final Map<String, Object> transactionsSummaries = transactionTotal.toMap();
         DatabaseReference summariesRef = getUserTransactionsReference();
-        summariesRef.child("transactionSummaries").setValue(transactionsSummaries)
+//        https://firebase.google.com/docs/database/android/read-and-write#update_specific_fields
+        summariesRef.child("transactionSummaries").updateChildren(transactionsSummaries)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
